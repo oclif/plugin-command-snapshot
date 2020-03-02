@@ -1,0 +1,20 @@
+[
+    {
+        "command": "help",
+        "flags": [
+            "all"
+        ]
+    },
+    {
+        "command": "snapshot:compare",
+        "flags": [
+            "filepath"
+        ]
+    },
+    {
+        "command": "snapshot:generate",
+        "flags": [
+            "filepath"
+        ]
+    }
+]
