@@ -5,7 +5,7 @@
   "author": "Ramyasri @nramyasri-sf",
   "bugs": "https://github.com/oclif/plugin-command-snapshot/issues",
   "dependencies": {
-    "@oclif/command": "^1",
+    "@oclif/command": "^1.6.0",
     "@oclif/config": "^1",
     "@types/fs-extra": "^8.1.0",
     "chalk": "^3.0.0",
@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
-    "@oclif/plugin-help": "^2",
+    "@oclif/plugin-help": "^3",
     "@oclif/test": "^1",
     "@types/chai": "^4",
     "@types/mocha": "^5",
