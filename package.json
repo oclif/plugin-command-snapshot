@@ -64,6 +64,6 @@
     "version": "oclif-dev readme && git add README.md",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "build": "rm -rf lib && tsc",
-    "pretest": "yarn build --noEmit"
+    "pretest": "yarn build --noEmit && tsc -p test --noEmit"
   }
 }
