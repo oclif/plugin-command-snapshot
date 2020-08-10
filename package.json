@@ -10,7 +10,7 @@
     "@types/fs-extra": "^9.0.1",
     "chalk": "^3.0.0",
     "sinon": "^9.0.0",
-    "tslib": "^1"
+    "tslib": "^2"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
