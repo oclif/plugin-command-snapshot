@@ -1,18 +1,21 @@
 [
     {
         "command": "help",
+        "plugin": "@oclif/plugin-help",
         "flags": [
             "all"
         ]
     },
     {
         "command": "snapshot:compare",
+        "plugin": "@oclif/plugin-command-snapshot",
         "flags": [
             "all"
         ]
     },
     {
         "command": "removed:command",
+        "plugin": "@oclif/plugin-command-snapshot",
         "flags": [
             "filepath"
         ]
