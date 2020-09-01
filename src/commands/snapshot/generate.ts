@@ -4,6 +4,7 @@ import * as _ from 'lodash'
 
 export type SnapshotEntry = {
   command: string;
+  plugin: string;
   flags: string[];
 }
 
@@ -22,7 +23,8 @@ export default class Generate extends Command {
       const resultCommands = _.sortBy(commands, 'id').map(command => {
         return {
           command: command.id,
-          flags: Object.keys(command.flags),
+          plugin: command.pluginName,
+          flags: Object.keys(command.flags).sort(),
         }
       }) as SnapshotEntry[]
       const filePath = flags.filepath.replace('{version}', this.config.version)

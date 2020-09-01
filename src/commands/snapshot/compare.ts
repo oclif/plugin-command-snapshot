@@ -1,7 +1,7 @@
 
 import {Command, flags} from '@oclif/command'
 import * as _ from 'lodash'
-import * as fsx from 'fs-extra'
+import * as fs from 'fs'
 import {EOL} from 'os'
 import {SnapshotEntry} from './generate'
 import * as chalk from 'chalk'
@@ -13,6 +13,7 @@ interface Change {
 }
 
 type CommandChange = {
+  plugin: string;
   flags: Change[];
 } & Change;
 
@@ -28,13 +29,18 @@ export default class Compare extends Command {
      * Compare a snapshot with the current commands
      * @param {CommandChange[]} initialCommands Command list from the snapshot
      * @param {CommandChange[]} updatedCommands Command list from runtime
+     * @returns all the command differences
      */
     public async compareSnapshot(initialCommands: SnapshotEntry[], updatedCommands: CommandChange[]) {
       const removedCommands: string[] = []
       const diffCommands: CommandChange[] = []
 
       initialCommands.forEach(initialCommand => {
-        const updatedCommand = updatedCommands.find(updatedCommand => initialCommand.command === updatedCommand.name)
+        const updatedCommand = updatedCommands.find(updatedCommand => {
+          // Protect against old snapshot files that don't have the plugin entry filled out.
+          const samePlugin = initialCommand.plugin ? initialCommand.plugin === updatedCommand.plugin : true
+          return initialCommand.command === updatedCommand.name && samePlugin
+        })
 
         if (updatedCommand) {
           const {changedFlags} = this.diffCommandFlags(initialCommand.flags, updatedCommand.flags)
@@ -123,11 +129,12 @@ export default class Compare extends Command {
 
     public async run() {
       const {flags} = this.parse(Compare)
-      const oldCommandFlags = JSON.parse(fsx.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
+      const oldCommandFlags = JSON.parse(fs.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
       const newCommandFlags = this.config.commands
       const resultnewCommandFlags: CommandChange[] = _.sortBy(newCommandFlags, 'id').map(command => {
         return {
           name: command.id,
+          plugin: command.pluginName || '',
           flags: Object.entries(command.flags).map(flagName => ({name: flagName[0]})),
         }
       })
