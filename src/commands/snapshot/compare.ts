@@ -1,9 +1,9 @@
 
-import {Command, flags} from '@oclif/command'
+import {flags} from '@oclif/command'
 import * as _ from 'lodash'
 import * as fs from 'fs'
 import {EOL} from 'os'
-import {SnapshotEntry} from './generate'
+import {SnapshotCommand, SnapshotEntry} from '../../snapshot-command'
 import * as chalk from 'chalk'
 
 interface Change {
@@ -17,7 +17,7 @@ type CommandChange = {
   flags: Change[];
 } & Change;
 
-export default class Compare extends Command {
+export default class Compare extends SnapshotCommand {
     public static flags = {
       filepath: flags.string({
         description: 'path of the generated snapshot file',
@@ -127,17 +127,20 @@ export default class Compare extends Command {
       return {addedFlags, removedFlags, updatedFlags, changedFlags}
     }
 
-    public async run() {
-      const {flags} = this.parse(Compare)
-      const oldCommandFlags = JSON.parse(fs.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
-      const newCommandFlags = this.config.commands
-      const resultnewCommandFlags: CommandChange[] = _.sortBy(newCommandFlags, 'id').map(command => {
+    get changed(): CommandChange[] {
+      return this.commands.map(command => {
         return {
           name: command.id,
           plugin: command.pluginName || '',
           flags: Object.entries(command.flags).map(flagName => ({name: flagName[0]})),
         }
       })
+    }
+
+    public async run() {
+      const {flags} = this.parse(Compare)
+      const oldCommandFlags = JSON.parse(fs.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
+      const resultnewCommandFlags = this.changed
       return this.compareSnapshot(oldCommandFlags, resultnewCommandFlags)
     }
 }

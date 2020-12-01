@@ -1,14 +1,8 @@
-import {Command, flags} from '@oclif/command'
+import {flags} from '@oclif/command'
 import * as fs from 'fs'
-import * as _ from 'lodash'
+import {SnapshotCommand} from '../../snapshot-command'
 
-export type SnapshotEntry = {
-  command: string;
-  plugin: string;
-  flags: string[];
-}
-
-export default class Generate extends Command {
+export default class Generate extends SnapshotCommand {
     public static flags = {
       filepath: flags.string({
         description: 'path to save the generated snapshot file; can use "{version}" to replace the current CLI/plugin version',
@@ -19,14 +13,8 @@ export default class Generate extends Command {
     public async run() {
       const numberOfSpaceChar = 4
       const {flags} = this.parse(Generate)
-      const commands = this.config.commands
-      const resultCommands = _.sortBy(commands, 'id').map(command => {
-        return {
-          command: command.id,
-          plugin: command.pluginName,
-          flags: Object.keys(command.flags).sort(),
-        }
-      }) as SnapshotEntry[]
+
+      const resultCommands = this.entries
       const filePath = flags.filepath.replace('{version}', this.config.version)
 
       fs.writeFileSync(filePath, JSON.stringify(resultCommands, null, numberOfSpaceChar))
