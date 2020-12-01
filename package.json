@@ -1,7 +1,7 @@
 {
   "name": "@oclif/plugin-command-snapshot",
   "description": "generates and compares OCLIF plugins snapshot files",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "author": "Ramyasri @nramyasri-sf",
   "bugs": "https://github.com/oclif/plugin-command-snapshot/issues",
   "dependencies": {
