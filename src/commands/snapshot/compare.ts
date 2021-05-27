@@ -4,7 +4,7 @@ import * as _ from 'lodash'
 import * as fs from 'fs'
 import {EOL} from 'os'
 import {SnapshotCommand, SnapshotEntry} from '../../snapshot-command'
-import * as chalk from 'chalk'
+import chalk from 'chalk'
 
 interface Change {
   name: string;

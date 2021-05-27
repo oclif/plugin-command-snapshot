@@ -1,5 +1,20 @@
 [
     {
+        "command": "schemas:compare",
+        "plugin": "@oclif/plugin-command-snapshot",
+        "flags": [
+            "filepath"
+        ]
+    },
+    {
+        "command": "schemas:generate",
+        "plugin": "@oclif/plugin-command-snapshot",
+        "flags": [
+            "filepath",
+            "singlefile"
+        ]
+    },
+    {
         "command": "snapshot:compare",
         "plugin": "@oclif/plugin-command-snapshot",
         "flags": [
