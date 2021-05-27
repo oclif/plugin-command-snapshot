@@ -1,6 +1,5 @@
 import * as path from 'path'
 import * as fs from 'fs'
-import * as glob from 'fast-glob'
 import {flags} from '@oclif/command'
 import {createGenerator, Schema} from 'ts-json-schema-generator'
 import {SnapshotCommand} from '../../snapshot-command'
@@ -21,18 +20,16 @@ export default class SchemaGenerate extends SnapshotCommand {
 
     public async run() {
       const {flags} = this.parse(SchemaGenerate)
-      const directory = flags.directory.replace('{version}', this.config.version)
+
       for (const cmd of this.commands) {
         // eslint-disable-next-line no-await-in-loop
         const loadedCmd = await cmd.load()
         this.classToId[loadedCmd.name] = loadedCmd.id
       }
 
-      const files = await glob(`${this.config.root.replace(new RegExp(path.sep, 'g'), '/')}/src/commands/**/*.ts`)
-
       const schemas: Record<string, Schema> = {}
 
-      for (const file of files) {
+      for (const file of this.getAllCmdFiles()) {
         const {returnType, commandId} = this.parseFile(file)
         const config = {
           path: file,
@@ -43,7 +40,9 @@ export default class SchemaGenerate extends SnapshotCommand {
         schemas[commandId] = schema
       }
 
+      const directory = flags.directory.replace('{version}', this.config.version)
       fs.mkdirSync(directory, {recursive: true})
+
       if (flags.singlefile) {
         const filePath = path.join(directory, 'schema.json')
         fs.writeFileSync(filePath, JSON.stringify(schemas, null, 2))
@@ -55,6 +54,21 @@ export default class SchemaGenerate extends SnapshotCommand {
           this.log(`Generated JSON schema file "${filePath}"`)
         }
       }
+    }
+
+    private getAllCmdFiles(dirPath: string = path.join(this.config.root, 'src', 'commands'), allFiles: string[] = []) {
+      const files = fs.readdirSync(dirPath)
+
+      files.forEach(file => {
+        const fPath = path.join(dirPath, file)
+        if (fs.statSync(fPath).isDirectory()) {
+          allFiles = this.getAllCmdFiles(fPath, allFiles)
+        } else if (file.endsWith('ts')) {
+          allFiles.push(fPath)
+        }
+      })
+
+      return allFiles
     }
 
     private parseFile(file: string): { returnType: string; commandId: string } {
