@@ -8,7 +8,7 @@ export default class SchemaGenerate extends SnapshotCommand {
     public static flags = {
       directory: flags.string({
         description: 'directory to save the generated schema files; can use "{version}" to insert the current CLI/plugin version',
-        default: './schemas',
+        default: './schemas/{version}',
       }),
       singlefile: flags.boolean({
         description: 'put generated schema into a single file',
@@ -23,7 +23,7 @@ export default class SchemaGenerate extends SnapshotCommand {
 
       for (const cmd of this.commands) {
         // eslint-disable-next-line no-await-in-loop
-        const loadedCmd = await cmd.load()
+        const loadedCmd = await cmd.load() // commands are loaded async in oclif/core
         this.classToId[loadedCmd.name] = loadedCmd.id
       }
 
@@ -49,7 +49,8 @@ export default class SchemaGenerate extends SnapshotCommand {
         this.log(`Generated JSON schema file "${filePath}"`)
       } else {
         for (const [cmdId, schema] of Object.entries(schemas)) {
-          const filePath = path.join(directory, `${cmdId!}.json`)
+          const fileName = cmdId.replace(/:/g, '-')
+          const filePath = path.join(directory, `${fileName}.json`)
           fs.writeFileSync(filePath, JSON.stringify(schema, null, 2))
           this.log(`Generated JSON schema file "${filePath}"`)
         }
