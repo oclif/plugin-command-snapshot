@@ -124,7 +124,8 @@ export default class SchemaGenerate extends SnapshotCommand {
         this.log(`Generated JSON schema file "${filePath}"`)
       } else {
         for (const [cmdId, schema] of Object.entries(schemas)) {
-          const filePath = path.join(directory, `${cmdId}.json`)
+          const fileName = `${cmdId.replace(/:/g, '-')}.json`
+          const filePath = path.join(directory, fileName)
           fs.writeFileSync(filePath, JSON.stringify(schema, null, 2))
           this.log(`Generated JSON schema file "${filePath}"`)
         }

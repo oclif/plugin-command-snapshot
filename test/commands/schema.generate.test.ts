@@ -20,9 +20,9 @@ describe('schema:generate', () => {
   .it('runs command to generate schema files', ctx => {
     // expect 4 calls because we have 4 command in this plugin
     expect(writeFileStub.callCount).to.equal(4)
-    expect(ctx.stdout).to.contain('Generated JSON schema file "schemas/schema:compare.json"')
-    expect(ctx.stdout).to.contain('Generated JSON schema file "schemas/schema:generate.json"')
-    expect(ctx.stdout).to.contain('Generated JSON schema file "schemas/snapshot:compare.json"')
-    expect(ctx.stdout).to.contain('Generated JSON schema file "schemas/snapshot:generate.json"')
+    expect(ctx.stdout).to.contain('Generated JSON schema file "schemas/schema-compare.json"')
+    expect(ctx.stdout).to.contain('Generated JSON schema file "schemas/schema-generate.json"')
+    expect(ctx.stdout).to.contain('Generated JSON schema file "schemas/snapshot-compare.json"')
+    expect(ctx.stdout).to.contain('Generated JSON schema file "schemas/snapshot-generate.json"')
   })
 })

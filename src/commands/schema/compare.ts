@@ -82,7 +82,7 @@ export default class SchemaCompare extends SnapshotCommand {
     } else {
       for (const file of schemaFiles) {
         const schema = JSON.parse(fs.readFileSync(file).toString('utf8')) as Schema
-        schemas[path.basename(file).replace('.json', '')] = schema
+        schemas[path.basename(file.replace(/-/g, ':')).replace('.json', '')] = schema
       }
     }
     return schemas
