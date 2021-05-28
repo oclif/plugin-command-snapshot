@@ -2,12 +2,14 @@ import * as path from 'path'
 import * as fs from 'fs'
 import * as semver from 'semver'
 import * as _ from 'lodash'
-import {diff} from 'just-diff'
+import {diff, Operation} from 'just-diff'
 import {flags} from '@oclif/command'
 import {Schema} from 'ts-json-schema-generator'
 import {SnapshotCommand} from '../../snapshot-command'
 import {SchemaGenerator} from './generate'
 import {bold, cyan, red, underline} from 'chalk'
+
+export type SchemaComparison = Array<{ op: Operation; path: (string | number)[]; value: any }>
 
 export default class SchemaCompare extends SnapshotCommand {
   public static flags = {
@@ -17,7 +19,7 @@ export default class SchemaCompare extends SnapshotCommand {
     }),
   };
 
-  public async run() {
+  public async run(): Promise<SchemaComparison> {
     const {flags} = this.parse(SchemaCompare)
     const existingSchema = this.readExistingSchema(flags.filepath)
     const latestSchema = await this.generateLatestSchema()
@@ -25,7 +27,7 @@ export default class SchemaCompare extends SnapshotCommand {
     const changes = diff(latestSchema, existingSchema)
     if (changes.length === 0) {
       this.log('No changes have been detected.')
-      return
+      return []
     }
 
     const humandReadableChanges: Record<string, string[]> = {}
@@ -65,6 +67,7 @@ export default class SchemaCompare extends SnapshotCommand {
     this.log()
     this.log('If intended, please update the schema file(s) and run again.')
     process.exitCode = 1
+    return changes
   }
 
   private readExistingSchema(filePath: string): Record<string, Schema> {

@@ -2,6 +2,12 @@ import {flags} from '@oclif/command'
 import * as fs from 'fs'
 import {SnapshotCommand} from '../../snapshot-command'
 
+export type Snapshots = {
+  command: string;
+  plugin: string;
+  flags: string[];
+}[]
+
 export default class Generate extends SnapshotCommand {
     public static flags = {
       filepath: flags.string({
@@ -10,7 +16,7 @@ export default class Generate extends SnapshotCommand {
       }),
     };
 
-    public async run() {
+    public async run(): Promise<Snapshots> {
       const numberOfSpaceChar = 4
       const {flags} = this.parse(Generate)
 
@@ -19,5 +25,6 @@ export default class Generate extends SnapshotCommand {
 
       fs.writeFileSync(filePath, JSON.stringify(resultCommands, null, numberOfSpaceChar))
       this.log(`Generated snapshot file "${filePath}"`)
+      return resultCommands
     }
 }

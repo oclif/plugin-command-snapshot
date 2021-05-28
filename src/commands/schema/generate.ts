@@ -3,30 +3,43 @@ import * as fs from 'fs'
 import {flags} from '@oclif/command'
 import {createGenerator, Schema} from 'ts-json-schema-generator'
 import {SnapshotCommand} from '../../snapshot-command'
+import {red} from 'chalk'
+
+export type SchemasMap = {
+  [key: string]: Schema;
+}
 
 export class SchemaGenerator {
   private classToId: Record<string, string> = {}
 
   constructor(private base: SnapshotCommand) {}
 
-  public async generate(): Promise<Record<string, Schema>> {
+  public async generate(): Promise<SchemasMap> {
     for (const cmd of this.base.commands) {
       // eslint-disable-next-line no-await-in-loop
       const loadedCmd = await cmd.load() // commands are loaded async in oclif/core
       this.classToId[loadedCmd.name] = loadedCmd.id
     }
 
-    const schemas: Record<string, Schema> = {}
+    const schemas: SchemasMap = {}
 
     for (const file of this.getAllCmdFiles()) {
       const {returnType, commandId} = this.parseFile(file)
-      const config = {
-        path: file,
-        type: returnType,
-        skipTypeCheck: true,
+      try {
+        const config = {
+          path: file,
+          type: returnType,
+          skipTypeCheck: true,
+        }
+        const schema = createGenerator(config).createSchema(config.type)
+        schemas[commandId] = schema
+      } catch (error) {
+        if (error.message.toLowerCase().includes('no root type')) {
+          throw new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`)
+        } else {
+          throw error
+        }
       }
-      const schema = createGenerator(config).createSchema(config.type)
-      schemas[commandId] = schema
     }
 
     return schemas
@@ -48,15 +61,30 @@ export class SchemaGenerator {
   }
 
   private parseFile(file: string): { returnType: string; commandId: string } {
-    const returnTypeRegex = /(?<=async\srun\(\):\sPromise<)(.*?)(?=>)/g
+    const returnTypeRegex = /(?<=async\srun\(\):\sPromise<)(.*?)(>*)(?=>)/g
     const contents = fs.readFileSync(file, 'utf8')
-    const [returnType] = returnTypeRegex.exec(contents) as string[]
+    const [returnType] = (returnTypeRegex.exec(contents) as string[]) || []
+    if (!returnType) {
+      throw new Error(`No return type found for file ${file}`)
+    }
+
+    this.validateReturnType(returnType)
+
     const commandId = this.determineCommandId(contents)
     if (!commandId) {
       throw new Error(`No commandId found for file ${file}`)
     }
-
     return {returnType, commandId}
+  }
+
+  private validateReturnType(returnType: string) {
+    const notAllowed = ['any', 'unknown']
+    const vaugeTypes = ['JsonMap', 'JsonCollection', 'AnyJson']
+    if (notAllowed.includes(returnType)) {
+      throw new Error(`${returnType} is not allowed. Please use a more specific type.`)
+    } else if (vaugeTypes.includes(returnType)) {
+      throw new Error(`${returnType} is too vauge. Please use a more specific type.`)
+    }
   }
 
   private determineCommandId(contents: string): string | undefined {
@@ -81,7 +109,7 @@ export default class SchemaGenerate extends SnapshotCommand {
       }),
     };
 
-    public async run() {
+    public async run(): Promise<SchemasMap> {
       const {flags} = this.parse(SchemaGenerate)
       const generator = new SchemaGenerator(this)
 
@@ -101,5 +129,6 @@ export default class SchemaGenerate extends SnapshotCommand {
           this.log(`Generated JSON schema file "${filePath}"`)
         }
       }
+      return schemas
     }
 }

@@ -1,13 +1,13 @@
 [
     {
-        "command": "schemas:compare",
+        "command": "schema:compare",
         "plugin": "@oclif/plugin-command-snapshot",
         "flags": [
             "filepath"
         ]
     },
     {
-        "command": "schemas:generate",
+        "command": "schema:generate",
         "plugin": "@oclif/plugin-command-snapshot",
         "flags": [
             "filepath",
