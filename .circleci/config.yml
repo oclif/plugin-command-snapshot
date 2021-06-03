@@ -1,0 +1,29 @@
+version: 2.1
+
+orbs:
+  release-management: salesforce/npm-release-management@4
+
+workflows:
+  version: 2
+  test-and-release:
+    jobs:
+      - release-management/test-package:
+          matrix:
+            parameters:
+              os:
+                - linux
+                - windows
+              node_version:
+                - latest
+                - lts
+            exclude:
+              - os: windows
+                node_version: lts
+      - release-management/release-package:
+          node_version: "14"
+          github-release: true
+          requires:
+            - release-management/test-package
+          filters:
+            branches:
+              only: master
