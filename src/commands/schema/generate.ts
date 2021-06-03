@@ -9,6 +9,8 @@ export type SchemasMap = {
   [key: string]: Schema;
 }
 
+export type GenerateResponse = string[];
+
 export class SchemaGenerator {
   private classToId: Record<string, string> = {}
 
@@ -109,7 +111,7 @@ export default class SchemaGenerate extends SnapshotCommand {
       }),
     };
 
-    public async run(): Promise<SchemasMap> {
+    public async run(): Promise<GenerateResponse> {
       const {flags} = this.parse(SchemaGenerate)
       const generator = new SchemaGenerator(this)
 
@@ -118,18 +120,21 @@ export default class SchemaGenerate extends SnapshotCommand {
       const directory = flags.filepath.replace('{version}', this.config.version)
       fs.mkdirSync(directory, {recursive: true})
 
+      const files: string[] = []
       if (flags.singlefile) {
         const filePath = path.join(directory, 'schema.json')
         fs.writeFileSync(filePath, JSON.stringify(schemas, null, 2))
         this.log(`Generated JSON schema file "${filePath}"`)
+        files.push(filePath)
       } else {
         for (const [cmdId, schema] of Object.entries(schemas)) {
           const fileName = `${cmdId.replace(/:/g, '-')}.json`
           const filePath = path.join(directory, fileName)
           fs.writeFileSync(filePath, JSON.stringify(schema, null, 2))
           this.log(`Generated JSON schema file "${filePath}"`)
+          files.push(filePath)
         }
       }
-      return schemas
+      return files
     }
 }
