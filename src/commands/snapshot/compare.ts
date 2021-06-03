@@ -17,6 +17,13 @@ type CommandChange = {
   flags: Change[];
 } & Change;
 
+export type CompareResponse = {
+  addedCommands?: string[];
+  removedCommands?: string[];
+  removedFlags?: string[];
+  diffCommands?: CommandChange[];
+}
+
 export default class Compare extends SnapshotCommand {
     public static flags = {
       filepath: flags.string({
@@ -31,7 +38,7 @@ export default class Compare extends SnapshotCommand {
      * @param {CommandChange[]} updatedCommands Command list from runtime
      * @returns all the command differences
      */
-    public async compareSnapshot(initialCommands: SnapshotEntry[], updatedCommands: CommandChange[]) {
+    public async compareSnapshot(initialCommands: SnapshotEntry[], updatedCommands: CommandChange[]): Promise<CompareResponse> {
       const removedCommands: string[] = []
       const diffCommands: CommandChange[] = []
 
@@ -58,7 +65,7 @@ export default class Compare extends SnapshotCommand {
 
       if (removedCommands.length === 0 && addedCommands.length === 0 && diffCommands.length === 0) {
         this.log('No changes have been detected.')
-        return
+        return {}
       }
 
       // Fail the process since there are changes to the snapshot file
@@ -137,7 +144,7 @@ export default class Compare extends SnapshotCommand {
       })
     }
 
-    public async run() {
+    public async run(): Promise<CompareResponse> {
       const {flags} = this.parse(Compare)
       const oldCommandFlags = JSON.parse(fs.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
       const resultnewCommandFlags = this.changed

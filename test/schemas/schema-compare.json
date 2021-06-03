@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/SchemaComparison",
+  "definitions": {
+    "SchemaComparison": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "$ref": "#/definitions/Operation"
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "type": [
+                "string",
+                "number"
+              ]
+            }
+          },
+          "value": {}
+        },
+        "required": [
+          "op",
+          "path",
+          "value"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "Operation": {
+      "type": "string",
+      "enum": [
+        "add",
+        "replace",
+        "remove"
+      ]
+    }
+  }
+}
