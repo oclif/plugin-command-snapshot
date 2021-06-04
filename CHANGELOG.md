@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/oclif/plugin-command-snapshot/compare/v2.1.0...v2.1.1) (2021-06-04)
+
+
+### Bug Fixes
+
+* ensure lib files are published ([c54b061](https://github.com/oclif/plugin-command-snapshot/commit/c54b06183aa39eaed60869421d3dd02e90fa27c0))
+
 ## [2.1.0](https://github.com/oclif/plugin-command-snapshot/compare/v2.0.0...v2.1.0) (2021-06-03)
 
 
