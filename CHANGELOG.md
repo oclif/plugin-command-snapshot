@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.2](https://github.com/oclif/plugin-command-snapshot/compare/v2.1.1...v2.1.2) (2021-06-07)
+
+
+### Bug Fixes
+
+* disallow void return type ([4655cfd](https://github.com/oclif/plugin-command-snapshot/commit/4655cfd86eb1429c6b0a8b036bb22e43336b6e09))
+
 ### [2.1.1](https://github.com/oclif/plugin-command-snapshot/compare/v2.1.0...v2.1.1) (2021-06-04)
 
 
