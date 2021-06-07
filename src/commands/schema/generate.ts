@@ -70,22 +70,22 @@ export class SchemaGenerator {
       throw new Error(`No return type found for file ${file}`)
     }
 
-    this.validateReturnType(returnType)
-
     const commandId = this.determineCommandId(contents)
     if (!commandId) {
       throw new Error(`No commandId found for file ${file}`)
     }
+
+    this.validateReturnType(returnType, commandId)
     return {returnType, commandId}
   }
 
-  private validateReturnType(returnType: string) {
-    const notAllowed = ['any', 'unknown']
+  private validateReturnType(returnType: string, commandId: string) {
+    const notAllowed = ['any', 'unknown', 'void']
     const vaugeTypes = ['JsonMap', 'JsonCollection', 'AnyJson']
     if (notAllowed.includes(returnType)) {
-      throw new Error(`${returnType} is not allowed. Please use a more specific type.`)
+      throw new Error(`${returnType} (from ${commandId}) is not allowed. Please use a more specific type.`)
     } else if (vaugeTypes.includes(returnType)) {
-      throw new Error(`${returnType} is too vauge. Please use a more specific type.`)
+      throw new Error(`${returnType} (from ${commandId}) is too vauge. Please use a more specific type.`)
     }
   }
 
