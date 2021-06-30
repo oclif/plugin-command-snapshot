@@ -14,7 +14,7 @@ export type GenerateResponse = string[];
 export class SchemaGenerator {
   private classToId: Record<string, string> = {}
 
-  constructor(private base: SnapshotCommand) {}
+  constructor(private base: SnapshotCommand, private ignorevoid = true) {}
 
   public async generate(): Promise<SchemasMap> {
     for (const cmd of this.base.commands) {
@@ -27,6 +27,7 @@ export class SchemaGenerator {
 
     for (const file of this.getAllCmdFiles()) {
       const {returnType, commandId} = this.parseFile(file)
+      if (this.ignorevoid && returnType === 'void') continue
       try {
         const config = {
           path: file,
@@ -80,7 +81,7 @@ export class SchemaGenerator {
   }
 
   private validateReturnType(returnType: string, commandId: string) {
-    const notAllowed = ['any', 'unknown', 'void']
+    const notAllowed = this.ignorevoid ? ['any', 'unknown'] : ['any', 'unknown', 'void']
     const vaugeTypes = ['JsonMap', 'JsonCollection', 'AnyJson']
     if (notAllowed.includes(returnType)) {
       throw new Error(`${returnType} (from ${commandId}) is not allowed. Please use a more specific type.`)
@@ -109,11 +110,15 @@ export default class SchemaGenerate extends SnapshotCommand {
         description: 'put generated schema into a single file',
         default: false,
       }),
+      ignorevoid: flags.boolean({
+        description: 'ignore commands that return void',
+        default: true,
+      }),
     };
 
     public async run(): Promise<GenerateResponse> {
       const {flags} = this.parse(SchemaGenerate)
-      const generator = new SchemaGenerator(this)
+      const generator = new SchemaGenerator(this, flags.ignorevoid)
 
       const schemas = await generator.generate()
 

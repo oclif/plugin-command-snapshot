@@ -11,6 +11,7 @@
         "plugin": "@oclif/plugin-command-snapshot",
         "flags": [
             "filepath",
+            "ignorevoid",
             "singlefile"
         ]
     },
