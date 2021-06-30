@@ -73,7 +73,7 @@ export default class SchemaCompare extends SnapshotCommand {
   private readExistingSchema(filePath: string): Record<string, Schema> {
     const contents = fs.readdirSync(filePath)
     const folderIsVersioned = contents.every(c => semver.valid(c))
-    const schemasDir = folderIsVersioned ? path.join(filePath, semver.rsort(contents)[0]) : filePath
+    const schemasDir = folderIsVersioned ? path.join(filePath, semver.rsort(contents)[0] || '') : filePath
     const schemaFiles = fs.readdirSync(schemasDir).map(f => path.join(schemasDir, f)).filter(f => !fs.statSync(f).isDirectory())
 
     let schemas: Record<string, Schema> = {}
