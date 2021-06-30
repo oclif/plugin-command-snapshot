@@ -21,6 +21,14 @@ export default class SchemaCompare extends SnapshotCommand {
 
   public async run(): Promise<SchemaComparison> {
     const {flags} = this.parse(SchemaCompare)
+
+    try {
+      fs.accessSync(flags.filepath)
+    } catch {
+      this.log(`${flags.filepath} not found.`)
+      return []
+    }
+
     const existingSchema = this.readExistingSchema(flags.filepath)
     const latestSchema = await this.generateLatestSchema()
 
