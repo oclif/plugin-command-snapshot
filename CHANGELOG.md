@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/oclif/plugin-command-snapshot/compare/v2.1.2...v2.2.0) (2021-06-30)
+
+
+### Features
+
+* add --ignorevoid flag to schema:generate ([9c4a48e](https://github.com/oclif/plugin-command-snapshot/commit/9c4a48e076e750c2320a47bc4b7c2f4bfc7029ae))
+
 ### [2.1.2](https://github.com/oclif/plugin-command-snapshot/compare/v2.1.1...v2.1.2) (2021-06-07)
 
 
