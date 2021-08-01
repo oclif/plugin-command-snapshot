@@ -20,7 +20,7 @@
     "@oclif/plugin-help": "^3",
     "@oclif/test": "^1.2.7",
     "@types/chai": "^4",
-    "@types/mocha": "^8",
+    "@types/mocha": "^9",
     "@types/node": "^15",
     "@types/semver": "^7.3.6",
     "chai": "^4",
