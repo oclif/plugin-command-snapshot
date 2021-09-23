@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import * as semver from 'semver'
 import * as _ from 'lodash'
 import {diff, Operation} from 'just-diff'
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import {Schema} from 'ts-json-schema-generator'
 import {SnapshotCommand} from '../../snapshot-command'
 import {SchemaGenerator} from './generate'
@@ -13,14 +13,14 @@ export type SchemaComparison = Array<{ op: Operation; path: (string | number)[];
 
 export default class SchemaCompare extends SnapshotCommand {
   public static flags = {
-    filepath: flags.string({
+    filepath: Flags.string({
       description: 'path of the generated snapshot file',
       default: './schemas',
     }),
   };
 
   public async run(): Promise<SchemaComparison> {
-    const {flags} = this.parse(SchemaCompare)
+    const {flags} = await this.parse(SchemaCompare)
 
     try {
       fs.accessSync(flags.filepath)

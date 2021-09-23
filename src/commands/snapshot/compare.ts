@@ -1,5 +1,5 @@
 
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import * as _ from 'lodash'
 import * as fs from 'fs'
 import {EOL} from 'os'
@@ -26,7 +26,7 @@ export type CompareResponse = {
 
 export default class Compare extends SnapshotCommand {
     public static flags = {
-      filepath: flags.string({
+      filepath: Flags.string({
         description: 'path of the generated snapshot file',
         default: './command-snapshot.json',
       }),
@@ -145,7 +145,7 @@ export default class Compare extends SnapshotCommand {
     }
 
     public async run(): Promise<CompareResponse> {
-      const {flags} = this.parse(Compare)
+      const {flags} = await this.parse(Compare)
       const oldCommandFlags = JSON.parse(fs.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
       const resultnewCommandFlags = this.changed
       return this.compareSnapshot(oldCommandFlags, resultnewCommandFlags)

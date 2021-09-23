@@ -5,8 +5,7 @@
   "author": "Ramyasri @nramyasri-sf",
   "bugs": "https://github.com/oclif/plugin-command-snapshot/issues",
   "dependencies": {
-    "@oclif/command": "^1.6.0",
-    "@oclif/config": "^1",
+    "@oclif/core": "^0.5.39",
     "chalk": "^4.1.1",
     "just-diff": "^3.1.1",
     "semver": "^7.3.5",
@@ -16,7 +15,6 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^12.1.4",
-    "@oclif/dev-cli": "^1",
     "@oclif/plugin-help": "^3",
     "@oclif/test": "^1.2.7",
     "@types/chai": "^4",
@@ -71,8 +69,8 @@
     "commitlint": "commitlint",
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "prepack": "rm -rf lib && tsc -b && ocliif manifest && oclif readme",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\" --timeout 10000",
-    "version": "oclif-dev readme && git add README.md"
+    "version": "oclif readme && git add README.md"
   }
 }
