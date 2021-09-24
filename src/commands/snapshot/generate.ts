@@ -1,4 +1,4 @@
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import * as fs from 'fs'
 import {SnapshotCommand} from '../../snapshot-command'
 
@@ -10,7 +10,7 @@ export type Snapshots = {
 
 export default class Generate extends SnapshotCommand {
     public static flags = {
-      filepath: flags.string({
+      filepath: Flags.string({
         description: 'path to save the generated snapshot file; can use "{version}" to replace the current CLI/plugin version',
         default: './command-snapshot.json',
       }),
@@ -18,7 +18,7 @@ export default class Generate extends SnapshotCommand {
 
     public async run(): Promise<Snapshots> {
       const numberOfSpaceChar = 4
-      const {flags} = this.parse(Generate)
+      const {flags} = await this.parse(Generate)
 
       const resultCommands = this.entries
       const filePath = flags.filepath.replace('{version}', this.config.version)
