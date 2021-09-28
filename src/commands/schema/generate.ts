@@ -1,6 +1,6 @@
 import * as path from 'path'
 import * as fs from 'fs'
-import {flags} from '@oclif/command'
+import {Flags} from '@oclif/core'
 import {createGenerator, Schema} from 'ts-json-schema-generator'
 import {SnapshotCommand} from '../../snapshot-command'
 import {red} from 'chalk'
@@ -36,7 +36,7 @@ export class SchemaGenerator {
         }
         const schema = createGenerator(config).createSchema(config.type)
         schemas[commandId] = schema
-      } catch (error) {
+      } catch (error: any) {
         if (error.message.toLowerCase().includes('no root type')) {
           throw new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`)
         } else {
@@ -102,22 +102,22 @@ export class SchemaGenerator {
 
 export default class SchemaGenerate extends SnapshotCommand {
     public static flags = {
-      filepath: flags.string({
+      filepath: Flags.string({
         description: 'directory to save the generated schema files; can use "{version}" to insert the current CLI/plugin version',
         default: './schemas',
       }),
-      singlefile: flags.boolean({
+      singlefile: Flags.boolean({
         description: 'put generated schema into a single file',
         default: false,
       }),
-      ignorevoid: flags.boolean({
+      ignorevoid: Flags.boolean({
         description: 'ignore commands that return void',
         default: true,
       }),
     };
 
     public async run(): Promise<GenerateResponse> {
-      const {flags} = this.parse(SchemaGenerate)
+      const {flags} = await this.parse(SchemaGenerate)
       const generator = new SchemaGenerator(this, flags.ignorevoid)
 
       const schemas = await generator.generate()
