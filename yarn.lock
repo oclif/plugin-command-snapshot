@@ -512,6 +512,13 @@
     widest-line "^3.1.0"
     wrap-ansi "^4.0.0"
 
+"@oclif/plugin-help@^5.1.0":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-help/-/plugin-help-5.1.1.tgz#d24bf4669ddfc9319d9844c7d210b606441216a3"
+  integrity sha512-a40HRpYEHi9Xn0/Vw2PDxlVQ8READO7hgB2fEDRqHhIQmSWBgXVT6R+/U9lcXdcFRF8EJH/7LTXSIyIwmjAmKw==
+  dependencies:
+    "@oclif/core" "^0.5.39"
+
 "@oclif/plugin-not-found@^1.2.2":
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@oclif/plugin-not-found/-/plugin-not-found-1.2.4.tgz#160108c82f0aa10f4fb52cee4e0135af34b7220b"
