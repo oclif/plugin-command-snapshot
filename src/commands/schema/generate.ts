@@ -50,19 +50,21 @@ export class SchemaGenerator {
     const hookSchemas: SchemasMap = {}
     for (const file of this.getAllHookFiles()) {
       const {returnType, hookId} = this.parseHookFile(file)
-      try {
-        const config = {
-          path: file,
-          type: returnType,
-          skipTypeCheck: true,
-        }
-        const schema = createGenerator(config).createSchema(config.type)
-        hookSchemas[hookId] = schema
-      } catch (error: any) {
-        if (error.message.toLowerCase().includes('no root type')) {
-          throw new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`)
-        } else {
-          throw error
+      if (returnType && hookId) {
+        try {
+          const config = {
+            path: file,
+            type: returnType,
+            skipTypeCheck: true,
+          }
+          const schema = createGenerator(config).createSchema(config.type)
+          hookSchemas[hookId] = schema
+        } catch (error: any) {
+          if (error.message.toLowerCase().includes('no root type')) {
+            throw new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`)
+          } else {
+            throw error
+          }
         }
       }
     }
@@ -110,12 +112,12 @@ export class SchemaGenerator {
     return {returnType, commandId}
   }
 
-  private parseHookFile(file: string): { returnType: string; hookId: string } {
+  private parseHookFile(file: string): { returnType: string | null; hookId: string | null } {
     const returnTypeRegex = /(?<=const\shook:\s(.*?)<)(.*?)(>*)(?=>)/g
     const contents = fs.readFileSync(file, 'utf8')
     const [returnType] = (returnTypeRegex.exec(contents) as string[]) || []
     if (!returnType) {
-      throw new Error(`No return type found for file ${file}`)
+      return {returnType: null, hookId: null}
     }
     const hooks = this.base.config.pjson.oclif?.hooks ?? {}
     const hookId = Object.keys(hooks).find(key => {
@@ -125,7 +127,7 @@ export class SchemaGenerator {
       return hookFileNames.includes(currentFileName)
     })
     if (!hookId) {
-      throw new Error(`No hookId found for file ${file}`)
+      return {returnType: null, hookId: null}
     }
 
     this.validateReturnType(returnType, hookId)
