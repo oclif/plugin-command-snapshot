@@ -9,6 +9,8 @@ export type SchemasMap = {
   [key: string]: Schema;
 }
 
+export type Schemas = { commands: SchemasMap; hooks: SchemasMap}
+
 export type GenerateResponse = string[];
 
 export class SchemaGenerator {
@@ -16,17 +18,17 @@ export class SchemaGenerator {
 
   constructor(private base: SnapshotCommand, private ignorevoid = true) {}
 
-  public async generate(): Promise<SchemasMap> {
+  public async generate(): Promise<Schemas> {
     for (const cmd of this.base.commands) {
       // eslint-disable-next-line no-await-in-loop
       const loadedCmd = await cmd.load() // commands are loaded async in oclif/core
       this.classToId[loadedCmd.name] = loadedCmd.id
     }
 
-    const schemas: SchemasMap = {}
+    const cmdSchemas: SchemasMap = {}
 
     for (const file of this.getAllCmdFiles()) {
-      const {returnType, commandId} = this.parseFile(file)
+      const {returnType, commandId} = this.parseCmdFile(file)
       if (this.ignorevoid && returnType === 'void') continue
       try {
         const config = {
@@ -35,7 +37,7 @@ export class SchemaGenerator {
           skipTypeCheck: true,
         }
         const schema = createGenerator(config).createSchema(config.type)
-        schemas[commandId] = schema
+        cmdSchemas[commandId] = schema
       } catch (error: any) {
         if (error.message.toLowerCase().includes('no root type')) {
           throw new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`)
@@ -45,16 +47,44 @@ export class SchemaGenerator {
       }
     }
 
-    return schemas
+    const hookSchemas: SchemasMap = {}
+    for (const file of this.getAllHookFiles()) {
+      const {returnType, hookId} = this.parseHookFile(file)
+      try {
+        const config = {
+          path: file,
+          type: returnType,
+          skipTypeCheck: true,
+        }
+        const schema = createGenerator(config).createSchema(config.type)
+        hookSchemas[hookId] = schema
+      } catch (error: any) {
+        if (error.message.toLowerCase().includes('no root type')) {
+          throw new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`)
+        } else {
+          throw error
+        }
+      }
+    }
+
+    return {commands: cmdSchemas, hooks: hookSchemas}
   }
 
-  private getAllCmdFiles(dirPath: string = path.join(this.base.config.root, 'src', 'commands'), allFiles: string[] = []) {
+  private getAllCmdFiles(): string[] {
+    return this.getAllFiles(path.join(this.base.config.root, 'src', 'commands'))
+  }
+
+  private getAllHookFiles(): string[] {
+    return this.getAllFiles(path.join(this.base.config.root, 'src', 'hooks'))
+  }
+
+  private getAllFiles(dirPath: string, allFiles: string[] = []): string[] {
     const files = fs.readdirSync(dirPath)
 
     files.forEach(file => {
       const fPath = path.join(dirPath, file)
       if (fs.statSync(fPath).isDirectory()) {
-        allFiles = this.getAllCmdFiles(fPath, allFiles)
+        allFiles = this.getAllFiles(fPath, allFiles)
       } else if (file.endsWith('ts')) {
         allFiles.push(fPath)
       }
@@ -63,7 +93,7 @@ export class SchemaGenerator {
     return allFiles
   }
 
-  private parseFile(file: string): { returnType: string; commandId: string } {
+  private parseCmdFile(file: string): { returnType: string; commandId: string } {
     const returnTypeRegex = /(?<=async\srun\(\):\sPromise<)(.*?)(>*)(?=>)/g
     const contents = fs.readFileSync(file, 'utf8')
     const [returnType] = (returnTypeRegex.exec(contents) as string[]) || []
@@ -78,6 +108,28 @@ export class SchemaGenerator {
 
     this.validateReturnType(returnType, commandId)
     return {returnType, commandId}
+  }
+
+  private parseHookFile(file: string): { returnType: string; hookId: string } {
+    const returnTypeRegex = /(?<=const\shook:\s(.*?)<)(.*?)(>*)(?=>)/g
+    const contents = fs.readFileSync(file, 'utf8')
+    const [returnType] = (returnTypeRegex.exec(contents) as string[]) || []
+    if (!returnType) {
+      throw new Error(`No return type found for file ${file}`)
+    }
+    const hooks = this.base.config.pjson.oclif?.hooks ?? {}
+    const hookId = Object.keys(hooks).find(key => {
+      const hookFiles = (Array.isArray(hooks[key]) ? hooks[key] : [hooks[key]])as string[]
+      const hookFileNames = hookFiles.map(f => path.basename(f).split('.')[0])
+      const currentFileName = path.basename(file).split('.')[0]
+      return hookFileNames.includes(currentFileName)
+    })
+    if (!hookId) {
+      throw new Error(`No hookId found for file ${file}`)
+    }
+
+    this.validateReturnType(returnType, hookId)
+    return {returnType, hookId}
   }
 
   private validateReturnType(returnType: string, commandId: string) {
@@ -128,16 +180,29 @@ export default class SchemaGenerate extends SnapshotCommand {
       const files: string[] = []
       if (flags.singlefile) {
         const filePath = path.join(directory, 'schema.json')
-        fs.writeFileSync(filePath, JSON.stringify(schemas, null, 2))
+        const all = Object.assign({}, schemas.hooks, schemas.commands)
+        fs.writeFileSync(filePath, JSON.stringify(all, null, 2))
         this.log(`Generated JSON schema file "${filePath}"`)
         files.push(filePath)
       } else {
-        for (const [cmdId, schema] of Object.entries(schemas)) {
+        for (const [cmdId, schema] of Object.entries(schemas.commands)) {
           const fileName = `${cmdId.replace(/:/g, '-')}.json`
           const filePath = path.join(directory, fileName)
           fs.writeFileSync(filePath, JSON.stringify(schema, null, 2))
           this.log(`Generated JSON schema file "${filePath}"`)
           files.push(filePath)
+        }
+
+        if (Object.values(schemas.hooks).length > 0) {
+          const hooksDir = path.join(directory, 'hooks')
+          fs.mkdirSync(hooksDir, {recursive: true})
+          for (const [hookId, schema] of Object.entries(schemas.hooks)) {
+            const fileName = `${hookId.replace(/:/g, '-')}.json`
+            const filePath = path.join(hooksDir, fileName)
+            fs.writeFileSync(filePath, JSON.stringify(schema, null, 2))
+            this.log(`Generated JSON schema file "${filePath}"`)
+            files.push(filePath)
+          }
         }
       }
       return files
