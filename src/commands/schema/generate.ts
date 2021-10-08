@@ -79,13 +79,24 @@ export class SchemaGenerator {
   }
 
   private getAllCmdFiles(): string[] {
-    return getAllFiles(path.join(this.base.config.root, 'src', 'commands'), '.ts')
+    const {rootDir} = this.getDirs()
+    return getAllFiles(path.join(rootDir, 'commands'), '.ts')
   }
 
   private getAllHookFiles(): string[] {
-    return getAllFiles(path.join(this.base.config.root, 'src', 'hooks'), '.ts')
+    const hookFiles = Object.values(this.base.config.pjson.oclif?.hooks ?? {}).reduce((x: string[], y: string | string[]) => {
+      return Array.isArray(y) ? x.concat(y) : x.concat([y])
+    }, [] as string[])
+    const {rootDir, outDir} = this.getDirs()
+    return (hookFiles as string[]).map(h => `${path.resolve(h)}.ts`.replace(outDir, rootDir))
   }
 
+  /**
+   * Use regex to find the typescript type being returned by the command's
+   * `run` method.
+   * @param file the file to parse
+   * @returns Returns the name of the return type and the command id.
+   */
   private parseCmdFile(file: string): { returnType: string; commandId: string } {
     const returnTypeRegex = /(?<=async\srun\(\):\sPromise<)(.*?)(>*)(?=>)/g
     const contents = fs.readFileSync(file, 'utf8')
@@ -103,6 +114,11 @@ export class SchemaGenerator {
     return {returnType, commandId}
   }
 
+  /**
+   * Use regex to find the typescript type being returned by the hook
+   * @param file the file to parse
+   * @returns Returns the name of the return type and the hook id.
+   */
   private parseHookFile(file: string): { returnType: string | null; hookId: string | null } {
     const returnTypeRegex = /(?<=const\shook:\s(.*?)<)(.*?)(>*)(?=>)/g
     const contents = fs.readFileSync(file, 'utf8')
@@ -142,6 +158,25 @@ export class SchemaGenerator {
         return cmdId
       }
     }
+  }
+
+  private getDirs(): { rootDir: string; outDir: string } {
+    const dirs = {
+      rootDir: path.join(this.base.config.root, 'src'),
+      outDir: path.join(this.base.config.root, 'lib'),
+    }
+    try {
+      const tsConfig = JSON.parse(fs.readFileSync(path.join(this.base.config.root, 'tsconfig.json'), 'utf-8'))
+      if (tsConfig.compilerOptions.rootDir) {
+        dirs.rootDir = path.join(this.base.config.root, tsConfig.compilerOptions.rootDir)
+      }
+      if (tsConfig.compilerOptions.outDir) {
+        dirs.outDir = path.join(this.base.config.root, tsConfig.compilerOptions.outDir)
+      }
+      return dirs
+    } catch {}
+
+    return dirs
   }
 }
 
