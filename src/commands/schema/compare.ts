@@ -6,7 +6,7 @@ import {diff, Operation} from 'just-diff'
 import {Flags} from '@oclif/core'
 import {Schema} from 'ts-json-schema-generator'
 import {SnapshotCommand} from '../../snapshot-command'
-import {SchemaGenerator} from './generate'
+import {getAllFiles, SchemaGenerator, Schemas} from './generate'
 import {bold, cyan, red, underline} from 'chalk'
 
 export type SchemaComparison = Array<{ op: Operation; path: (string | number)[]; value: any }>
@@ -30,8 +30,9 @@ export default class SchemaCompare extends SnapshotCommand {
     }
 
     const existingSchema = this.readExistingSchema(flags.filepath)
-    const latestSchema = await this.generateLatestSchema()
-
+    const latestSchema = (await this.generateLatestSchema())
+    this.debug('existingSchema', existingSchema)
+    this.debug('latestSchema', latestSchema)
     const changes = diff(latestSchema, existingSchema)
     if (changes.length === 0) {
       this.log('No changes have been detected.')
@@ -56,7 +57,7 @@ export default class SchemaCompare extends SnapshotCommand {
         humandReadableChanges[commandId].push(`${underline(readablePath)} was ${cyan('added')} to latest schema`)
         break
       case 'remove':
-        humandReadableChanges[commandId].push(`${underline(readablePath)} was ${cyan('removed')} from latest schema`)
+        humandReadableChanges[commandId].push(`${underline(readablePath)} was ${cyan('not found')} in latest schema`)
         break
       default:
         break
@@ -78,25 +79,33 @@ export default class SchemaCompare extends SnapshotCommand {
     return changes
   }
 
-  private readExistingSchema(filePath: string): Record<string, Schema> {
+  private readExistingSchema(filePath: string): Schemas {
     const contents = fs.readdirSync(filePath)
     const folderIsVersioned = contents.every(c => semver.valid(c))
     const schemasDir = folderIsVersioned ? path.join(filePath, semver.rsort(contents)[0] || '') : filePath
-    const schemaFiles = fs.readdirSync(schemasDir).map(f => path.join(schemasDir, f)).filter(f => !fs.statSync(f).isDirectory())
+    const schemaFiles = getAllFiles(schemasDir, '.json')
 
-    let schemas: Record<string, Schema> = {}
+    let schemas: Schemas = {
+      commands: {},
+      hooks: {},
+    }
     if (schemaFiles.length === 1 && schemaFiles[0].endsWith('schema.json')) {
-      schemas = JSON.parse(fs.readFileSync(schemaFiles[0]).toString('utf8')) as Record<string, Schema>
+      schemas = JSON.parse(fs.readFileSync(schemaFiles[0]).toString('utf8')) as Schemas
     } else {
       for (const file of schemaFiles) {
         const schema = JSON.parse(fs.readFileSync(file).toString('utf8')) as Schema
-        schemas[path.basename(file.replace(/-/g, ':')).replace('.json', '')] = schema
+        const key = path.basename(file.replace(/-/g, ':')).replace('.json', '')
+        if (file.split(path.sep).includes('hooks')) {
+          schemas.hooks[key] = schema
+        } else {
+          schemas.commands[key] = schema
+        }
       }
     }
     return schemas
   }
 
-  private async generateLatestSchema(): Promise<Record<string, Schema>> {
+  private async generateLatestSchema(): Promise<Schemas> {
     const generator = new SchemaGenerator(this)
     return generator.generate()
   }

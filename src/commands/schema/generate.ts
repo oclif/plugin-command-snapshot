@@ -13,6 +13,23 @@ export type Schemas = { commands: SchemasMap; hooks: SchemasMap}
 
 export type GenerateResponse = string[];
 
+export function getAllFiles(dirPath: string, ext: string, allFiles: string[] = []): string[] {
+  let files: string[] = []
+  try {
+    files = fs.readdirSync(dirPath)
+  } catch {}
+  files.forEach(file => {
+    const fPath = path.join(dirPath, file)
+    if (fs.statSync(fPath).isDirectory()) {
+      allFiles = getAllFiles(fPath, ext, allFiles)
+    } else if (file.endsWith(ext)) {
+      allFiles.push(fPath)
+    }
+  })
+
+  return allFiles
+}
+
 export class SchemaGenerator {
   private classToId: Record<string, string> = {}
 
@@ -73,26 +90,11 @@ export class SchemaGenerator {
   }
 
   private getAllCmdFiles(): string[] {
-    return this.getAllFiles(path.join(this.base.config.root, 'src', 'commands'))
+    return getAllFiles(path.join(this.base.config.root, 'src', 'commands'), '.ts')
   }
 
   private getAllHookFiles(): string[] {
-    return this.getAllFiles(path.join(this.base.config.root, 'src', 'hooks'))
-  }
-
-  private getAllFiles(dirPath: string, allFiles: string[] = []): string[] {
-    const files = fs.readdirSync(dirPath)
-
-    files.forEach(file => {
-      const fPath = path.join(dirPath, file)
-      if (fs.statSync(fPath).isDirectory()) {
-        allFiles = this.getAllFiles(fPath, allFiles)
-      } else if (file.endsWith('ts')) {
-        allFiles.push(fPath)
-      }
-    })
-
-    return allFiles
+    return getAllFiles(path.join(this.base.config.root, 'src', 'hooks'), '.ts')
   }
 
   private parseCmdFile(file: string): { returnType: string; commandId: string } {
@@ -182,8 +184,7 @@ export default class SchemaGenerate extends SnapshotCommand {
       const files: string[] = []
       if (flags.singlefile) {
         const filePath = path.join(directory, 'schema.json')
-        const all = Object.assign({}, schemas.hooks, schemas.commands)
-        fs.writeFileSync(filePath, JSON.stringify(all, null, 2))
+        fs.writeFileSync(filePath, JSON.stringify(schemas, null, 2))
         this.log(`Generated JSON schema file "${filePath}"`)
         files.push(filePath)
       } else {
