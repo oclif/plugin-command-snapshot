@@ -47,46 +47,35 @@ export class SchemaGenerator {
     for (const file of this.getAllCmdFiles()) {
       const {returnType, commandId} = this.parseCmdFile(file)
       if (this.ignorevoid && returnType === 'void') continue
-      try {
-        const config = {
-          path: file,
-          type: returnType,
-          skipTypeCheck: true,
-        }
-        const schema = createGenerator(config).createSchema(config.type)
-        cmdSchemas[commandId] = schema
-      } catch (error: any) {
-        if (error.message.toLowerCase().includes('no root type')) {
-          throw new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`)
-        } else {
-          throw error
-        }
-      }
+      cmdSchemas[commandId] = this.generateSchema(returnType, file)
     }
 
     const hookSchemas: SchemasMap = {}
     for (const file of this.getAllHookFiles()) {
       const {returnType, hookId} = this.parseHookFile(file)
       if (returnType && hookId) {
-        try {
-          const config = {
-            path: file,
-            type: returnType,
-            skipTypeCheck: true,
-          }
-          const schema = createGenerator(config).createSchema(config.type)
-          hookSchemas[hookId] = schema
-        } catch (error: any) {
-          if (error.message.toLowerCase().includes('no root type')) {
-            throw new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`)
-          } else {
-            throw error
-          }
-        }
+        hookSchemas[hookId] = this.generateSchema(returnType, file)
       }
     }
 
     return {commands: cmdSchemas, hooks: hookSchemas}
+  }
+
+  private generateSchema(returnType: string, file: string): Schema {
+    try {
+      const config = {
+        path: file,
+        type: returnType,
+        skipTypeCheck: true,
+      }
+      return createGenerator(config).createSchema(config.type)
+    } catch (error: any) {
+      if (error.message.toLowerCase().includes('no root type')) {
+        throw new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`)
+      } else {
+        throw error
+      }
+    }
   }
 
   private getAllCmdFiles(): string[] {
