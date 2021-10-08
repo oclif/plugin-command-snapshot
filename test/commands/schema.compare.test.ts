@@ -20,8 +20,8 @@ describe('schema:compare', () => {
   .command(['schema:compare', '--filepath=./test/schemas'])
   .it('shows changes', ctx => {
     expect(ctx.stdout).to.contain('Found the following schema changes:')
-    expect(ctx.stdout).to.contain('- definitions.Snapshots.items.properties.flags.type was removed from latest schema')
-    expect(ctx.stdout).to.contain('- snapshot:compare was removed from latest schema')
+    expect(ctx.stdout).to.contain('- definitions.Snapshots.items.properties.flags.type was not found in latest schema')
+    expect(ctx.stdout).to.contain('- commands.snapshot:compare was not found in latest schema')
     expect(ctx.stdout).to.contain('If intended, please update the schema file(s) and run again.')
   })
 })
