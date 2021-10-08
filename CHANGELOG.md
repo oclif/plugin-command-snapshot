@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/oclif/plugin-command-snapshot/compare/v3.0.0...v3.1.0) (2021-10-08)
+
+
+### Features
+
+* generate schema for hooks ([266b832](https://github.com/oclif/plugin-command-snapshot/commit/266b83242fab1961b036998119791b999a08ee19))
+
+
+### Bug Fixes
+
+* ignore hooks with no return type ([070ed41](https://github.com/oclif/plugin-command-snapshot/commit/070ed41902268d48034fdaa2b96f9a4a54eefd2c))
+* schema:compare with hooks ([508549a](https://github.com/oclif/plugin-command-snapshot/commit/508549a372e56b3d79dec970e62477d9905dec13))
+
 ### [2.2.2](https://github.com/oclif/plugin-command-snapshot/compare/v2.2.1...v2.2.2) (2021-06-30)
 
 
