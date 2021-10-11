@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.1](https://github.com/oclif/plugin-command-snapshot/compare/v3.1.0...v3.1.1) (2021-10-11)
+
+
+### Bug Fixes
+
+* update hook regex ([#144](https://github.com/oclif/plugin-command-snapshot/issues/144)) ([dc1225c](https://github.com/oclif/plugin-command-snapshot/commit/dc1225cc22e071958436e320b8951063b038d4cc))
+
 ## [3.1.0](https://github.com/oclif/plugin-command-snapshot/compare/v3.0.0...v3.1.0) (2021-10-08)
 
 
