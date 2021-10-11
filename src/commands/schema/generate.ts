@@ -120,10 +120,10 @@ export class SchemaGenerator {
    * @returns Returns the name of the return type and the hook id.
    */
   private parseHookFile(file: string): { returnType: string | null; hookId: string | null } {
-    const returnTypeRegex = /(?<=const\shook:\s(.*?)<)(.*?)(>*)(?=>)/g
+    const returnTypeRegex = /(?<=const\shook:\s(.*?)<)[^'](.*?)[^'](>*)(?=>)/g
     const contents = fs.readFileSync(file, 'utf8')
     const [returnType] = (returnTypeRegex.exec(contents) as string[]) || []
-    if (!returnType) {
+    if (!returnType || returnType === 'void') {
       return {returnType: null, hookId: null}
     }
     const hooks = this.base.config.pjson.oclif?.hooks ?? {}
