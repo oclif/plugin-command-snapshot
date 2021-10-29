@@ -5,7 +5,9 @@ export type SnapshotEntry = {
   command: string;
   plugin: string;
   flags: string[];
+  alias: string[];
 }
+export type Snapshots = SnapshotEntry[]
 
 export abstract class SnapshotCommand extends Command {
   get commands() {
@@ -22,6 +24,7 @@ export abstract class SnapshotCommand extends Command {
         command: command.id,
         plugin: command.pluginName,
         flags: Object.keys(command.flags).sort(),
+        alias: command.aliases || [],
       }
     }) as SnapshotEntry[]
   }

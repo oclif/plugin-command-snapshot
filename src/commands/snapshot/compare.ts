@@ -15,6 +15,7 @@ interface Change {
 type CommandChange = {
   plugin: string;
   flags: Change[];
+  alias: Change[];
 } & Change;
 
 export type CompareResponse = {
@@ -54,6 +55,12 @@ export default class Compare extends SnapshotCommand {
           if (changedFlags.length > 0) {
             diffCommands.push(updatedCommand)
           }
+
+          const changeAlias = this.getDifferences(initialCommand.alias, updatedCommand.alias)
+          if (changeAlias.length > 0) {
+            updatedCommand.alias = changeAlias
+            diffCommands.push(updatedCommand)
+          }
         } else {
           removedCommands.push(initialCommand.command)
         }
@@ -81,16 +88,24 @@ export default class Compare extends SnapshotCommand {
       })
 
       const removedFlags: string[] = []
+
       if (diffCommands.length > 0) {
         diffCommands.forEach(command => {
           this.log(`\t ${command.name}`)
-
           command.flags.forEach(flag => {
             if (flag.added || flag.removed) {
               const color = flag.added ? chalk.green : chalk.red
               this.log(color(`\t\t${flag.added ? '+' : '-'}${flag.name}`))
             }
             if (flag.removed) removedFlags.push()
+          })
+
+          command.alias.forEach(alias => {
+            if (alias.added || alias.removed) {
+              const color = alias.added ? chalk.green : chalk.red
+              this.log(color(`\t\t'ALIAS'${alias.added ? '+' : '-'}${alias.name}`))
+            }
+            if (alias.removed) removedFlags.push()
           })
         })
       }
@@ -102,7 +117,7 @@ export default class Compare extends SnapshotCommand {
         this.log(chalk.red(`${EOL}Since there are deletions, a major version bump is required.`))
       }
 
-      return {addedCommands, removedCommands, removedFlags, diffCommands}
+      return {addedCommands, removedCommands, removedFlags: removedCommands, diffCommands}
     }
 
     /**
@@ -134,20 +149,40 @@ export default class Compare extends SnapshotCommand {
       return {addedFlags, removedFlags, updatedFlags, changedFlags}
     }
 
+    private getDifferences(initial: string[], updated: Change[]) {
+      const updatedNames = updated.map(update => update.name)
+      const addedNames = _.difference(initial, updatedNames)
+      const removedNames = _.difference(updatedNames, initial)
+      const changes: Change[] = []
+
+      updated.forEach(update => {
+        if (addedNames.includes(update.name)) {
+          update.added = true
+          changes.push({name: update.name, added: true})
+        }
+      })
+
+      removedNames.forEach(removed => {
+        changes.push({name: removed, removed: true})
+      })
+      return changes
+    }
+
     get changed(): CommandChange[] {
       return this.commands.map(command => {
         return {
           name: command.id,
           plugin: command.pluginName || '',
           flags: Object.entries(command.flags).map(flagName => ({name: flagName[0]})),
+          alias: command.aliases.map(alias => ({name: alias})),
         }
       })
     }
 
     public async run(): Promise<CompareResponse> {
       const {flags} = await this.parse(Compare)
-      const oldCommandFlags = JSON.parse(fs.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
-      const resultnewCommandFlags = this.changed
-      return this.compareSnapshot(oldCommandFlags, resultnewCommandFlags)
+      const oldCommands = JSON.parse(fs.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
+      const newCommands = this.changed
+      return this.compareSnapshot(oldCommands, newCommands)
     }
 }
