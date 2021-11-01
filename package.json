@@ -24,7 +24,7 @@
     "@types/node": "^15",
     "@types/semver": "^7.3.6",
     "chai": "^4",
-    "commitlint": "^12.1.4",
+    "commitlint": "^14.1.0",
     "eslint": "^7",
     "eslint-config-oclif": "^3.1",
     "eslint-config-oclif-typescript": "^0.2",
