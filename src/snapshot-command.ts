@@ -24,7 +24,7 @@ export abstract class SnapshotCommand extends Command {
         command: command.id,
         plugin: command.pluginName,
         flags: Object.keys(command.flags).sort(),
-        alias: command.aliases || [],
+        alias: command.aliases,
       }
     }) as SnapshotEntry[]
   }

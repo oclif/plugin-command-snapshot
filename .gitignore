@@ -4,3 +4,5 @@ lib/
 oclif.manifest.json
 /package-lock.json
 yarn-error.json
+
+.idea/
