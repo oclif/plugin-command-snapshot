@@ -15,6 +15,7 @@ interface Change {
 type CommandChange = {
   plugin: string;
   flags: Change[];
+  alias: Change[];
 } & Change;
 
 export type CompareResponse = {
@@ -50,8 +51,11 @@ export default class Compare extends SnapshotCommand {
         })
 
         if (updatedCommand) {
-          const {changedFlags} = this.diffCommandFlags(initialCommand.flags, updatedCommand.flags)
-          if (changedFlags.length > 0) {
+          const changedFlags = this.diffCommandProperty(initialCommand.flags, updatedCommand.flags).changedProperty
+          const changeAlias = this.diffCommandProperty(initialCommand.alias, updatedCommand.alias).changedProperty
+
+          if (changeAlias.length > 0 || changedFlags.length > 0) {
+            updatedCommand.alias = changeAlias
             diffCommands.push(updatedCommand)
           }
         } else {
@@ -76,62 +80,80 @@ export default class Compare extends SnapshotCommand {
       removedCommands.forEach(command => {
         this.log(chalk.red(`\t-${command}`))
       })
+
       addedCommands.forEach(command => {
         this.log(chalk.green(`\t+${command}`))
       })
 
-      const removedFlags: string[] = []
-      if (diffCommands.length > 0) {
-        diffCommands.forEach(command => {
-          this.log(`\t ${command.name}`)
+      const removedProperties: string[] = []
 
-          command.flags.forEach(flag => {
-            if (flag.added || flag.removed) {
-              const color = flag.added ? chalk.green : chalk.red
-              this.log(color(`\t\t${flag.added ? '+' : '-'}${flag.name}`))
+      diffCommands.forEach(command => {
+        this.log(`\t${command.name}`)
+
+        const printCommandDiff = (properties: Change[], propertyName: string) => {
+          if (properties.find(prop => prop.added || prop.removed)) this.log(`\t  ${propertyName}:`)
+          properties.forEach(prop => {
+            if (prop.added || prop.removed) {
+              const color = prop.added ? chalk.green : chalk.red
+              this.log(color(`\t\t${prop.added ? '+' : '-'}${prop.name}`))
             }
-            if (flag.removed) removedFlags.push()
+            if (prop.removed) removedProperties.push()
           })
-        })
-      }
+        }
 
-      this.log(`${EOL}Command or flag differences detected. If intended, please update the snapshot file and run again.`)
+        printCommandDiff(command.flags, 'Flags')
+        printCommandDiff(command.alias, 'Aliases')
+      })
 
-      // Check if existent commands have been deleted
-      if (removedCommands.length > 0 || removedFlags.length > 0) {
+      this.log(`${EOL}Command, flag, or alias differences detected. If intended, please update the snapshot file and run again.`)
+
+      // Check if existent commands, or properties (flags, aliases) have been deleted
+      if (removedCommands.length > 0 || removedProperties.length > 0) {
         this.log(chalk.red(`${EOL}Since there are deletions, a major version bump is required.`))
       }
 
-      return {addedCommands, removedCommands, removedFlags, diffCommands}
+      return {addedCommands, removedCommands, removedFlags: removedCommands, diffCommands}
     }
 
     /**
-     * Compares a flag snapshot with the current command's flags
-     * @param {string[]} initialFlags Flag list from the snapshot
-     * @param {string[]} updatedFlags Flag list from runtime
-     * @param {string} initialCommand Command the flags belong to
-     * @return {boolean} true if no changes, false otherwise
-     */
+     * @deprecated in favor of diffCommandProperty
+   * Compares a flag snapshot with the current command's flags
+   * @param {string[]} initialFlags Flag list from the snapshot
+   * @param {string[]} updatedFlags Flag list from runtime
+   * @return {boolean} true if no changes, false otherwise
+   */
     public diffCommandFlags(initialFlags: string[], updatedFlags: Change[]) {
-      const updatedFlagNames = updatedFlags.map(updatedFlag => updatedFlag.name)
-      const addedFlags = _.difference(updatedFlagNames, initialFlags)
-      const removedFlags = _.difference(initialFlags, updatedFlagNames)
-      const changedFlags: Change[] = []
+      const diffedFlags = this.diffCommandProperty(initialFlags, updatedFlags)
+      return {addedFlags: diffedFlags.addedProperty, removedFlags: diffedFlags.removedProperty, updatedFlags: diffedFlags.updated, changedFlags: diffedFlags.changedProperty}
+    }
 
-      updatedFlags.forEach(updatedFlag => {
-        if (addedFlags.includes(updatedFlag.name)) {
-          updatedFlag.added = true
-          changedFlags.push(updatedFlag)
+    /**
+   * compares two command's properties to
+   * @return a list of added, removed, updated, and changed properties
+   * @param initial initial command property to compare against
+   * @param updated generated command property to compare with
+   */
+    public diffCommandProperty(initial: string[], updated: Change[]) {
+      const updatedPropertyNames = updated.map(update => update.name)
+      const addedProperty = _.difference(updatedPropertyNames, initial)
+      const removedProperty = _.difference(initial, updatedPropertyNames)
+      const changedProperty: Change[] = []
+
+      updated.forEach(update => {
+        if (addedProperty.includes(update.name)) {
+          update.added = true
+          changedProperty.push(update)
         }
       })
-      removedFlags.forEach(removedFlag => {
-        changedFlags.push({name: removedFlag, removed: true})
+
+      removedProperty.forEach(remove => {
+        changedProperty.push({name: remove, removed: true})
         // The removed flags in not included in the updated flags, but we want it to
         // so it shows removed.
-        updatedFlags.push({name: removedFlag, removed: true})
+        updated.push({name: remove, removed: true})
       })
 
-      return {addedFlags, removedFlags, updatedFlags, changedFlags}
+      return {addedProperty, removedProperty, updated, changedProperty}
     }
 
     get changed(): CommandChange[] {
@@ -140,14 +162,15 @@ export default class Compare extends SnapshotCommand {
           name: command.id,
           plugin: command.pluginName || '',
           flags: Object.entries(command.flags).map(flagName => ({name: flagName[0]})),
+          alias: command.aliases.map(alias => ({name: alias})),
         }
       })
     }
 
     public async run(): Promise<CompareResponse> {
       const {flags} = await this.parse(Compare)
-      const oldCommandFlags = JSON.parse(fs.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
-      const resultnewCommandFlags = this.changed
-      return this.compareSnapshot(oldCommandFlags, resultnewCommandFlags)
+      const oldCommands = JSON.parse(fs.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
+      const newCommands = this.changed
+      return this.compareSnapshot(oldCommands, newCommands)
     }
 }

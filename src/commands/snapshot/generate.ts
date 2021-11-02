@@ -1,12 +1,8 @@
 import {Flags} from '@oclif/core'
 import * as fs from 'fs'
-import {SnapshotCommand} from '../../snapshot-command'
+import {SnapshotCommand, SnapshotEntry} from '../../snapshot-command'
 
-export type Snapshots = {
-  command: string;
-  plugin: string;
-  flags: string[];
-}[]
+export type Snapshots = SnapshotEntry[]
 
 export default class Generate extends SnapshotCommand {
     public static flags = {
