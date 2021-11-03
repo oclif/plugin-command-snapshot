@@ -52,10 +52,19 @@ export default class Compare extends SnapshotCommand {
 
         if (updatedCommand) {
           const changedFlags = this.diffCommandProperty(initialCommand.flags, updatedCommand.flags).changedProperty
-          const changeAlias = this.diffCommandProperty(initialCommand.alias, updatedCommand.alias).changedProperty
+          const changedAlias = this.diffCommandProperty(initialCommand.alias, updatedCommand.alias).changedProperty
+          const flagsChanged = changedFlags.length > 0
+          const aliasChanged = changedAlias.length > 0
 
-          if (changeAlias.length > 0 || changedFlags.length > 0) {
-            updatedCommand.alias = changeAlias
+          if (aliasChanged) {
+            updatedCommand.alias = changedAlias
+          }
+
+          if (flagsChanged) {
+            updatedCommand.flags = changedFlags
+          }
+
+          if (flagsChanged || aliasChanged) {
             diffCommands.push(updatedCommand)
           }
         } else {
@@ -128,7 +137,7 @@ export default class Compare extends SnapshotCommand {
     }
 
     /**
-   * compares two command's properties to
+   * compares two command's properties to each other
    * @return a list of added, removed, updated, and changed properties
    * @param initial initial command property to compare against
    * @param updated generated command property to compare with
