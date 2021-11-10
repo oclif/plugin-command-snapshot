@@ -71,7 +71,7 @@
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif manifest . && oclif readme",
-    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\" --timeout 10000",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\" --timeout 20000",
     "version": "oclif readme && git add README.md"
   }
 }

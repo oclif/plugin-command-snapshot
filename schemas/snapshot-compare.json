@@ -61,9 +61,31 @@
                   ],
                   "additionalProperties": false
                 }
+              },
+              "alias": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "removed": {
+                      "type": "boolean"
+                    },
+                    "added": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false
+                }
               }
             },
             "required": [
+              "alias",
               "flags",
               "name",
               "plugin"

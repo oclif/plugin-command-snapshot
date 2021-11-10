@@ -5,28 +5,38 @@
     "Snapshots": {
       "type": "array",
       "items": {
-        "type": "object",
-        "properties": {
-          "command": {
+        "$ref": "#/definitions/SnapshotEntry"
+      }
+    },
+    "SnapshotEntry": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string"
+        },
+        "plugin": {
+          "type": "string"
+        },
+        "flags": {
+          "type": "array",
+          "items": {
             "type": "string"
-          },
-          "plugin": {
-            "type": "string"
-          },
-          "flags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           }
         },
-        "required": [
-          "command",
-          "plugin",
-          "flags"
-        ],
-        "additionalProperties": false
-      }
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "command",
+        "plugin",
+        "flags",
+        "alias"
+      ],
+      "additionalProperties": false
     }
   }
 }
