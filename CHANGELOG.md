@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.2](https://github.com/oclif/plugin-command-snapshot/compare/v3.1.1...v3.1.2) (2021-11-10)
+
+
+### Bug Fixes
+
+* adds alias property to command-snapshot \n BREAKING CHANGE: this changes the output of the file of the command snapshot which will cause compare to fail ([dea464e](https://github.com/oclif/plugin-command-snapshot/commit/dea464e17c11efd6a777982f4689bfc41f6ce9bd))
+
 ### [3.1.1](https://github.com/oclif/plugin-command-snapshot/compare/v3.1.0...v3.1.1) (2021-10-11)
 
 
