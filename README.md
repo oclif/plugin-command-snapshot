@@ -6,7 +6,7 @@ Generates and compares OCLIF plugins snapshot files
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/@oclif/plugin-command-snapshot.svg)](https://npmjs.org/package/@oclif/plugin-command-snapshot)
 [![Downloads/week](https://img.shields.io/npm/dw/@oclif/plugin-command-snapshot.svg)](https://npmjs.org/package/@oclif/plugin-command-snapshot)
-[![License](https://img.shields.io/npm/l/@oclif/plugin-command-snapshot.svg)](https://github.com/nramyasri-sf/@oclif/plugin-command-snapshot/blob/master/package.json)
+[![License](https://img.shields.io/npm/l/@oclif/plugin-command-snapshot.svg)](https://github.com/nramyasri-sf/@oclif/plugin-command-snapshot/blob/main/package.json)
 
 <!-- toc -->
 * [Usage](#usage)
