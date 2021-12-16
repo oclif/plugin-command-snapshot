@@ -101,7 +101,7 @@ export class SchemaGenerator {
 }
 
 export default class SchemaGenerate extends SnapshotCommand {
-    public static flags = {
+    public static flags: flags.Input<any> = {
       filepath: flags.string({
         description: 'directory to save the generated schema files; can use "{version}" to insert the current CLI/plugin version',
         default: './schemas',
