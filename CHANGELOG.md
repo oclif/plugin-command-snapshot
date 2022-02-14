@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.3](https://github.com/oclif/plugin-command-snapshot/compare/v3.1.2...v3.1.3) (2022-02-14)
+
+
+### Bug Fixes
+
+* bump demps ([c2643c7](https://github.com/oclif/plugin-command-snapshot/commit/c2643c745aa121677be1bac60547180ba406b8e4))
+
 ### [3.1.2](https://github.com/oclif/plugin-command-snapshot/compare/v3.1.1...v3.1.2) (2021-11-10)
 
 
