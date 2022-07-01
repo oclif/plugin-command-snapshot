@@ -5,7 +5,7 @@
   "author": "Salesforce",
   "bugs": "https://github.com/oclif/plugin-command-snapshot/issues",
   "dependencies": {
-    "@oclif/core": "^1.6.4",
+    "@oclif/core": "^1.9.5",
     "chalk": "^4.1.2",
     "just-diff": "^3.1.1",
     "semver": "^7.3.5",
