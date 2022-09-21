@@ -3,13 +3,22 @@ import * as fs from 'fs'
 import * as semver from 'semver'
 import * as _ from 'lodash'
 import {diff, Operation} from 'just-diff'
-import {Flags} from '@oclif/core'
+import {Flags, toConfiguredId} from '@oclif/core'
 import {Schema} from 'ts-json-schema-generator'
 import {SnapshotCommand} from '../../snapshot-command'
 import {getAllFiles, SchemaGenerator, Schemas} from './generate'
 import {bold, cyan, red, underline} from 'chalk'
 
 export type SchemaComparison = Array<{ op: Operation; path: (string | number)[]; value: any }>
+
+function isNumber(n: string | number): boolean {
+  return Number.isInteger(Number(n))
+}
+
+function isMeaningless(n: string | number): boolean {
+  const meaninglessKeys: Array<string | number> = ['$comment', '__computed']
+  return meaninglessKeys.includes(n)
+}
 
 export default class SchemaCompare extends SnapshotCommand {
   public static flags = {
@@ -39,25 +48,41 @@ export default class SchemaCompare extends SnapshotCommand {
       return []
     }
 
-    const humandReadableChanges: Record<string, string[]> = {}
+    const humanReadableChanges: Record<string, string[]> = {}
     for (const change of changes) {
+      const lastPathElement = change.path[change.path.length - 1]
+      if (isMeaningless(lastPathElement)) continue
+
       const objPath = change.path.join('.')
       const existing = _.get(existingSchema, objPath)
       const latest = _.get(latestSchema, objPath)
       const [commandId] = objPath.split('.definitions')
       const readablePath = objPath.replace(`${commandId}.`, '')
-      if (!humandReadableChanges[commandId]) {
-        humandReadableChanges[commandId] = []
+
+      if (!humanReadableChanges[commandId]) {
+        humanReadableChanges[commandId] = []
       }
+
+      const lastElementIsNum = isNumber(lastPathElement)
+      const basePath = lastElementIsNum ? readablePath.replace(`.${lastPathElement}`, '') : readablePath
+
       switch (change.op) {
       case 'replace':
-        humandReadableChanges[commandId].push(`${underline(readablePath)} was changed from ${cyan(existing)} to ${cyan(latest)}`)
+        humanReadableChanges[commandId].push(`${underline(readablePath)} was changed from ${cyan(existing)} to ${cyan(latest)}`)
         break
       case 'add':
-        humandReadableChanges[commandId].push(`${underline(readablePath)} was ${cyan('added')} to latest schema`)
+        humanReadableChanges[commandId].push(
+          lastElementIsNum ?
+            `Array item at ${underline(basePath)} was ${cyan('added')} to latest schema` :
+            `${underline(readablePath)} was ${cyan('added')} to latest schema`,
+        )
         break
       case 'remove':
-        humandReadableChanges[commandId].push(`${underline(readablePath)} was ${cyan('not found')} in latest schema`)
+        humanReadableChanges[commandId].push(
+          lastElementIsNum ?
+            `Array item at ${underline(basePath)} was ${cyan('not found')} in latest schema` :
+            `${underline(readablePath)} was ${cyan('not found')} in latest schema`,
+        )
         break
       default:
         break
@@ -66,7 +91,7 @@ export default class SchemaCompare extends SnapshotCommand {
 
     this.log()
     this.log(bold(red('Found the following schema changes:')))
-    for (const [commandId, changes] of Object.entries(humandReadableChanges)) {
+    for (const [commandId, changes] of Object.entries(humanReadableChanges)) {
       this.log()
       this.log(bold(commandId))
       for (const change of changes) {
@@ -74,7 +99,8 @@ export default class SchemaCompare extends SnapshotCommand {
       }
     }
     this.log()
-    this.log('If intended, please update the schema file(s) and run again.')
+    const bin = process.platform === 'win32' ? 'bin\\dev.cmd' : 'bin/dev'
+    this.log('If intended, please update the schema file(s) and run again:', bold(`${bin} ${toConfiguredId('schema:generate', this.config)}`))
     process.exitCode = 1
     return changes
   }

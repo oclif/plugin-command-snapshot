@@ -33,7 +33,7 @@ export function getAllFiles(dirPath: string, ext: string, allFiles: string[] = [
 export class SchemaGenerator {
   private classToId: Record<string, string> = {}
 
-  constructor(private base: SnapshotCommand, private ignorevoid = true) {}
+  constructor(private base: SnapshotCommand, private ignoreVoid = true) {}
 
   public async generate(): Promise<Schemas> {
     for (const cmd of this.base.commands) {
@@ -46,7 +46,7 @@ export class SchemaGenerator {
 
     for (const file of this.getAllCmdFiles()) {
       const {returnType, commandId} = this.parseCmdFile(file)
-      if (this.ignorevoid && returnType === 'void') continue
+      if (this.ignoreVoid && returnType === 'void') continue
       cmdSchemas[commandId] = this.generateSchema(returnType, file)
     }
 
@@ -142,12 +142,12 @@ export class SchemaGenerator {
   }
 
   private validateReturnType(returnType: string, commandId: string) {
-    const notAllowed = this.ignorevoid ? ['any', 'unknown'] : ['any', 'unknown', 'void']
-    const vaugeTypes = ['JsonMap', 'JsonCollection', 'AnyJson']
+    const notAllowed = this.ignoreVoid ? ['any', 'unknown'] : ['any', 'unknown', 'void']
+    const vagueTypes = ['JsonMap', 'JsonCollection', 'AnyJson']
     if (notAllowed.includes(returnType)) {
       throw new Error(`${returnType} (from ${commandId}) is not allowed. Please use a more specific type.`)
-    } else if (vaugeTypes.includes(returnType)) {
-      throw new Error(`${returnType} (from ${commandId}) is too vauge. Please use a more specific type.`)
+    } else if (vagueTypes.includes(returnType)) {
+      throw new Error(`${returnType} (from ${commandId}) is too vague. Please use a more specific type.`)
     }
   }
 
