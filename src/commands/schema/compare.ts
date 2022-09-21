@@ -1,7 +1,7 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import * as semver from 'semver'
-import * as _ from 'lodash'
+import {get} from 'lodash'
 import {diff, Operation} from 'just-diff'
 import {Flags, toConfiguredId} from '@oclif/core'
 import {Schema} from 'ts-json-schema-generator'
@@ -54,8 +54,8 @@ export default class SchemaCompare extends SnapshotCommand {
       if (isMeaningless(lastPathElement)) continue
 
       const objPath = change.path.join('.')
-      const existing = _.get(existingSchema, objPath)
-      const latest = _.get(latestSchema, objPath)
+      const existing = get(existingSchema, objPath)
+      const latest = get(latestSchema, objPath)
       const [commandId] = objPath.split('.definitions')
       const readablePath = objPath.replace(`${commandId}.`, '')
 
@@ -98,6 +98,7 @@ export default class SchemaCompare extends SnapshotCommand {
         this.log(`  - ${change}`)
       }
     }
+
     this.log()
     const bin = process.platform === 'win32' ? 'bin\\dev.cmd' : 'bin/dev'
     this.log('If intended, please update the schema file(s) and run again:', bold(`${bin} ${toConfiguredId('schema:generate', this.config)}`))
@@ -128,6 +129,7 @@ export default class SchemaCompare extends SnapshotCommand {
         }
       }
     }
+
     return schemas
   }
 
