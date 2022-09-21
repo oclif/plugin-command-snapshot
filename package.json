@@ -9,15 +9,15 @@
     "chalk": "^4.1.2",
     "just-diff": "^5.1.1",
     "lodash": "^4.17.21",
-    "semver": "^7.3.5",
+    "semver": "^7.3.7",
     "ts-json-schema-generator": "^1.1.0",
-    "tslib": "^2"
+    "tslib": "^2.4.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^12.1.4",
     "@oclif/plugin-help": "^5.1.12",
-    "@oclif/test": "^2.1.0",
-    "@types/chai": "^4",
+    "@oclif/test": "^2.1.1",
+    "@types/chai": "^4.3.3",
     "@types/mocha": "^8",
     "@types/node": "^15",
     "@types/semver": "^7.3.9",
