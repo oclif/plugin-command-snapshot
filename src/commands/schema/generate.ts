@@ -18,14 +18,15 @@ export function getAllFiles(dirPath: string, ext: string, allFiles: string[] = [
   try {
     files = fs.readdirSync(dirPath)
   } catch {}
-  files.forEach(file => {
+
+  for (const file of files) {
     const fPath = path.join(dirPath, file)
     if (fs.statSync(fPath).isDirectory()) {
       allFiles = getAllFiles(fPath, ext, allFiles)
     } else if (file.endsWith(ext)) {
       allFiles.push(fPath)
     }
-  })
+  }
 
   return allFiles
 }
@@ -33,7 +34,7 @@ export function getAllFiles(dirPath: string, ext: string, allFiles: string[] = [
 export class SchemaGenerator {
   private classToId: Record<string, string> = {}
 
-  constructor(private base: SnapshotCommand, private ignorevoid = true) {}
+  constructor(private base: SnapshotCommand, private ignoreVoid = true) {}
 
   public async generate(): Promise<Schemas> {
     for (const cmd of this.base.commands) {
@@ -46,7 +47,7 @@ export class SchemaGenerator {
 
     for (const file of this.getAllCmdFiles()) {
       const {returnType, commandId} = this.parseCmdFile(file)
-      if (this.ignorevoid && returnType === 'void') continue
+      if (this.ignoreVoid && returnType === 'void') continue
       cmdSchemas[commandId] = this.generateSchema(returnType, file)
     }
 
@@ -70,11 +71,8 @@ export class SchemaGenerator {
       }
       return createGenerator(config).createSchema(config.type)
     } catch (error: any) {
-      if (error.message.toLowerCase().includes('no root type')) {
-        throw new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`)
-      } else {
-        throw error
-      }
+      const error_ = error.message.toLowerCase().includes('no root type') ? new Error(`Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(returnType)} is exported.`) : error
+      throw error_
     }
   }
 
@@ -84,8 +82,9 @@ export class SchemaGenerator {
   }
 
   private getAllHookFiles(): string[] {
+    // eslint-disable-next-line unicorn/no-array-reduce
     const hookFiles = Object.values(this.base.config.pjson.oclif?.hooks ?? {}).reduce((x: string[], y: string | string[]) => {
-      return Array.isArray(y) ? x.concat(y) : x.concat([y])
+      return Array.isArray(y) ? [...x, ...y] : [...x, y]
     }, [] as string[])
     const {rootDir, outDir} = this.getDirs()
     return (hookFiles as string[]).map(h => `${path.resolve(h)}.ts`.replace(outDir, rootDir))
@@ -126,6 +125,7 @@ export class SchemaGenerator {
     if (!returnType || returnType === 'void') {
       return {returnType: null, hookId: null}
     }
+
     const hooks = this.base.config.pjson.oclif?.hooks ?? {}
     const hookId = Object.keys(hooks).find(key => {
       const hookFiles = (Array.isArray(hooks[key]) ? hooks[key] : [hooks[key]])as string[]
@@ -142,12 +142,12 @@ export class SchemaGenerator {
   }
 
   private validateReturnType(returnType: string, commandId: string) {
-    const notAllowed = this.ignorevoid ? ['any', 'unknown'] : ['any', 'unknown', 'void']
-    const vaugeTypes = ['JsonMap', 'JsonCollection', 'AnyJson']
+    const notAllowed = this.ignoreVoid ? ['any', 'unknown'] : ['any', 'unknown', 'void']
+    const vagueTypes = ['JsonMap', 'JsonCollection', 'AnyJson']
     if (notAllowed.includes(returnType)) {
       throw new Error(`${returnType} (from ${commandId}) is not allowed. Please use a more specific type.`)
-    } else if (vaugeTypes.includes(returnType)) {
-      throw new Error(`${returnType} (from ${commandId}) is too vauge. Please use a more specific type.`)
+    } else if (vagueTypes.includes(returnType)) {
+      throw new Error(`${returnType} (from ${commandId}) is too vague. Please use a more specific type.`)
     }
   }
 
@@ -170,9 +170,11 @@ export class SchemaGenerator {
       if (tsConfig.compilerOptions.rootDir) {
         dirs.rootDir = path.join(this.base.config.root, tsConfig.compilerOptions.rootDir)
       }
+
       if (tsConfig.compilerOptions.outDir) {
         dirs.outDir = path.join(this.base.config.root, tsConfig.compilerOptions.outDir)
       }
+
       return dirs
     } catch {}
 
@@ -232,6 +234,7 @@ export default class SchemaGenerate extends SnapshotCommand {
           }
         }
       }
+
       return files
     }
 }

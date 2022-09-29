@@ -43,7 +43,7 @@ export default class Compare extends SnapshotCommand {
       const removedCommands: string[] = []
       const diffCommands: CommandChange[] = []
 
-      initialCommands.forEach(initialCommand => {
+      for (const initialCommand of initialCommands) {
         const updatedCommand = updatedCommands.find(updatedCommand => {
           // Protect against old snapshot files that don't have the plugin entry filled out.
           const samePlugin = initialCommand.plugin ? initialCommand.plugin === updatedCommand.plugin : true
@@ -70,7 +70,7 @@ export default class Compare extends SnapshotCommand {
         } else {
           removedCommands.push(initialCommand.command)
         }
-      })
+      }
 
       const initialCommandNames = initialCommands.map(initialCommand => initialCommand.command)
       const updatedCommandNames = updatedCommands.map(updatedCommand => updatedCommand.name)
@@ -86,33 +86,33 @@ export default class Compare extends SnapshotCommand {
 
       this.log(`The following commands and flags have modified: (${chalk.green('+')} added, ${chalk.red('-')} removed)${EOL}`)
 
-      removedCommands.forEach(command => {
+      for (const command of removedCommands) {
         this.log(chalk.red(`\t-${command}`))
-      })
+      }
 
-      addedCommands.forEach(command => {
+      for (const command of addedCommands) {
         this.log(chalk.green(`\t+${command}`))
-      })
+      }
 
       const removedProperties: string[] = []
 
-      diffCommands.forEach(command => {
-        this.log(`\t${command.name}`)
+      const printCommandDiff = (properties: Change[], propertyName: string) => {
+        if (properties.some(prop => prop.added || prop.removed)) this.log(`\t  ${propertyName}:`)
+        for (const prop of properties) {
+          if (prop.added || prop.removed) {
+            const color = prop.added ? chalk.green : chalk.red
+            this.log(color(`\t\t${prop.added ? '+' : '-'}${prop.name}`))
+          }
 
-        const printCommandDiff = (properties: Change[], propertyName: string) => {
-          if (properties.find(prop => prop.added || prop.removed)) this.log(`\t  ${propertyName}:`)
-          properties.forEach(prop => {
-            if (prop.added || prop.removed) {
-              const color = prop.added ? chalk.green : chalk.red
-              this.log(color(`\t\t${prop.added ? '+' : '-'}${prop.name}`))
-            }
-            if (prop.removed) removedProperties.push()
-          })
+          if (prop.removed) removedProperties.push()
         }
+      }
 
+      for (const command of diffCommands) {
+        this.log(`\t${command.name}`)
         printCommandDiff(command.flags, 'Flags')
         printCommandDiff(command.alias, 'Aliases')
-      })
+      }
 
       this.log(`${EOL}Command, flag, or alias differences detected. If intended, please update the snapshot file and run again.`)
 
@@ -131,7 +131,7 @@ export default class Compare extends SnapshotCommand {
    * @param {string[]} updatedFlags Flag list from runtime
    * @return {boolean} true if no changes, false otherwise
    */
-    public diffCommandFlags(initialFlags: string[], updatedFlags: Change[]) {
+    public diffCommandFlags(initialFlags: string[], updatedFlags: Change[]): { addedFlags: string[]; removedFlags: string[]; updatedFlags: Change[]; changedFlags: Change[] } {
       const diffedFlags = this.diffCommandProperty(initialFlags, updatedFlags)
       return {addedFlags: diffedFlags.addedProperty, removedFlags: diffedFlags.removedProperty, updatedFlags: diffedFlags.updated, changedFlags: diffedFlags.changedProperty}
     }
@@ -142,25 +142,25 @@ export default class Compare extends SnapshotCommand {
    * @param initial initial command property to compare against
    * @param updated generated command property to compare with
    */
-    public diffCommandProperty(initial: string[], updated: Change[]) {
+    public diffCommandProperty(initial: string[], updated: Change[]): { addedProperty: string[]; removedProperty: string[]; updated: Change[]; changedProperty: Change[] } {
       const updatedPropertyNames = updated.map(update => update.name)
       const addedProperty = _.difference(updatedPropertyNames, initial)
       const removedProperty = _.difference(initial, updatedPropertyNames)
       const changedProperty: Change[] = []
 
-      updated.forEach(update => {
+      for (const update of updated) {
         if (addedProperty.includes(update.name)) {
           update.added = true
           changedProperty.push(update)
         }
-      })
+      }
 
-      removedProperty.forEach(remove => {
+      for (const remove of removedProperty) {
         changedProperty.push({name: remove, removed: true})
         // The removed flags in not included in the updated flags, but we want it to
         // so it shows removed.
         updated.push({name: remove, removed: true})
-      })
+      }
 
       return {addedProperty, removedProperty, updated, changedProperty}
     }
