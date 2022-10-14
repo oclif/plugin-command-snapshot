@@ -43,10 +43,6 @@ export default class SchemaCompare extends SnapshotCommand {
     this.debug('existingSchema', existingSchema)
     this.debug('latestSchema', latestSchema)
     const changes = diff(latestSchema, existingSchema)
-    if (changes.length === 0) {
-      this.log('No changes have been detected.')
-      return []
-    }
 
     const humanReadableChanges: Record<string, string[]> = {}
     for (const change of changes) {
@@ -87,6 +83,11 @@ export default class SchemaCompare extends SnapshotCommand {
       default:
         break
       }
+    }
+
+    if (Object.keys(humanReadableChanges).length === 0) {
+      this.log('No changes have been detected.')
+      return []
     }
 
     this.log()
