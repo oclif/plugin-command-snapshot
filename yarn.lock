@@ -851,12 +851,12 @@
   resolved "https://registry.npmjs.org/@oclif/linewrap/-/linewrap-1.0.0.tgz#aedcb64b479d4db7be24196384897b5000901d91"
   integrity sha512-Ups2dShK52xXa8w6iBWLgcjPJWjais6KPJQq3gQ/88AY6BXoTX+MIGFPrWQO1KLMiQfoTpcLnUwloN4brrVUHw==
 
-"@oclif/plugin-help@^5.1.11", "@oclif/plugin-help@^5.1.17":
-  version "5.1.17"
-  resolved "https://registry.yarnpkg.com/@oclif/plugin-help/-/plugin-help-5.1.17.tgz#7ecef29b947efe57aefc5a044ec79d8dbe9e024a"
-  integrity sha512-yc35xn4lSkHTnS6ajolYAi9dVMWXsRRPPPNEfYF0Nq1bkKNnh3DEC1MS/iTWNEYC5JCVd4YAQ2/Ky2wqA2Ujiw==
+"@oclif/plugin-help@^5.1.11", "@oclif/plugin-help@^5.1.18":
+  version "5.1.18"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-help/-/plugin-help-5.1.18.tgz#8f1d864f76ee151e840e3d20de5a05f00ed91a54"
+  integrity sha512-EICYITNwc155RHBiRnhUmvuc5oEuRE+9B+8rErw4OKKpPfZ5edvth38e4QOONfDRjb3MHfNu0sds1aB3i/BikA==
   dependencies:
-    "@oclif/core" "^1.20.0"
+    "@oclif/core" "^1.20.2"
 
 "@oclif/plugin-not-found@^2.3.1":
   version "2.3.1"
