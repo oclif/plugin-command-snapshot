@@ -14,6 +14,8 @@ export abstract class SnapshotCommand extends Command {
     const commands = this.config.commands
     // Ignore dev plugins
     .filter(command => !devPlugins.includes(command.pluginName ?? ''))
+    // remove aliases that reference themselves
+    .filter(command => !command.aliases.includes(command.id))
     return _.sortBy(commands, 'id')
   }
 
