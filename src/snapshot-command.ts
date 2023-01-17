@@ -1,4 +1,4 @@
-import {Command, Interfaces} from '@oclif/core'
+import {Command} from '@oclif/core'
 import * as _ from 'lodash'
 
 export type SnapshotEntry = {
@@ -9,7 +9,7 @@ export type SnapshotEntry = {
 }
 
 export abstract class SnapshotCommand extends Command {
-  get commands(): Interfaces.Command.Loadable[] {
+  get commands(): Command.Loadable[] {
     const devPlugins = this.config.pjson.oclif.devPlugins ?? []
     const commands = this.config.commands
     // Ignore dev plugins
