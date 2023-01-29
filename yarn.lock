@@ -655,7 +655,7 @@
     widest-line "^3.1.0"
     wrap-ansi "^7.0.0"
 
-"@oclif/core@^2.0.2-beta.6", "@oclif/core@^2.0.3", "@oclif/core@^2.0.7":
+"@oclif/core@^2.0.3", "@oclif/core@^2.0.7":
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/@oclif/core/-/core-2.0.7.tgz#a17a85dfa105dda120fbc5647432010feaa97a9e"
   integrity sha512-pj7hIH8SBeH3qha47fmyqdaBdNVEqesRgnKFh8Ytdb4S41/4BYOiQuyQGuvnKgvicH6DMxp4FbM9EQEW46V9xw==
@@ -729,13 +729,13 @@
   resolved "https://registry.yarnpkg.com/@oclif/screen/-/screen-3.0.4.tgz#663db0ecaf23f3184e7f01886ed578060e4a7f1c"
   integrity sha512-IMsTN1dXEXaOSre27j/ywGbBjrzx0FNd1XmuhCWCB9NTPrhWI1Ifbz+YLSEcstfQfocYsrbrIessxXb2oon4lA==
 
-"@oclif/test@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@oclif/test/-/test-2.3.0.tgz#c62efef4e4fa2ec3d44a3a79b58cc9e43898413b"
-  integrity sha512-DgoEOY/Y1FvNwA1J0Sy7u6jZSHbDutw6kNOWqVizlf1wSJiHKV6Ia9DyhHsg2Nb4EZ+1AKcetC0fI7ixLxxJHw==
+"@oclif/test@^2.3.4":
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/@oclif/test/-/test-2.3.4.tgz#eddeda4e13a5665c9fd65e06f34cd2faca14caee"
+  integrity sha512-sIuDKKw108NQxPbo+j/TY6HBe1j2tbtjEOJ9aHpU7U+hwsTL3/zyU1YZgiGekdQ/OA0PULz3VLafSs+IioWHmw==
   dependencies:
-    "@oclif/core" "^2.0.2-beta.6"
-    fancy-test "^2.0.11"
+    "@oclif/core" "^2.0.7"
+    fancy-test "^2.0.12"
 
 "@octokit/auth-token@^2.4.4":
   version "2.5.0"
@@ -2452,10 +2452,10 @@ external-editor@^3.0.3:
     iconv-lite "^0.4.24"
     tmp "^0.0.33"
 
-fancy-test@^2.0.11:
-  version "2.0.11"
-  resolved "https://registry.yarnpkg.com/fancy-test/-/fancy-test-2.0.11.tgz#27eb9fd5076114c609bd5ee6f5b9c8bd8ec67689"
-  integrity sha512-R98gMuHy/tsGUmChkehXvq4PmzdhUKl1SDyYkrvh4Vhc+8fjUUQWu2pts4Y4BStjkltPtQtccNYN63sjs/a3Xw==
+fancy-test@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/fancy-test/-/fancy-test-2.0.12.tgz#a93cd92ffc23f70b069c39f19940d34f64c6ca67"
+  integrity sha512-S7qVQNaViLTMzn71huZvrUCV59ldq+enQ1EQOkdNbl4q4Om97gwqbYKvZoglsnzCWRRFaFP+qHynpdqaLdiZqg==
   dependencies:
     "@types/chai" "*"
     "@types/lodash" "*"
@@ -2463,7 +2463,7 @@ fancy-test@^2.0.11:
     "@types/sinon" "*"
     lodash "^4.17.13"
     mock-stdin "^1.0.0"
-    nock "^13.0.0"
+    nock "^13.3.0"
     stdout-stderr "^0.1.9"
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
@@ -3600,11 +3600,6 @@ lodash.merge@^4.6.2:
   resolved "https://registry.npmjs.org/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
-lodash.set@^4.3.2:
-  version "4.3.2"
-  resolved "https://registry.npmjs.org/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
-  integrity sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=
-
 lodash.truncate@^4.4.2:
   version "4.4.2"
   resolved "https://registry.npmjs.org/lodash.truncate/-/lodash.truncate-4.4.2.tgz#5a350da0b1113b837ecfffd5812cbe58d6eae193"
@@ -4008,14 +4003,14 @@ nise@^5.1.0:
     just-extend "^4.0.2"
     path-to-regexp "^1.7.0"
 
-nock@^13.0.0:
-  version "13.1.0"
-  resolved "https://registry.npmjs.org/nock/-/nock-13.1.0.tgz#41c8ce8b35ab7d618c4cbf40de1d5bce319979ba"
-  integrity sha512-3N3DUY8XYrxxzWazQ+nSBpiaJ3q6gcpNh4gXovC/QBxrsvNp4tq+wsLHF6mJ3nrn3lPLn7KCJqKxy/9aD+0fdw==
+nock@^13.3.0:
+  version "13.3.0"
+  resolved "https://registry.yarnpkg.com/nock/-/nock-13.3.0.tgz#b13069c1a03f1ad63120f994b04bfd2556925768"
+  integrity sha512-HHqYQ6mBeiMc+N038w8LkMpDCRquCHWeNmN3v6645P3NhN2+qXOBqvPqo7Rt1VyCMzKhJ733wZqw5B7cQVFNPg==
   dependencies:
     debug "^4.1.0"
     json-stringify-safe "^5.0.1"
-    lodash.set "^4.3.2"
+    lodash "^4.17.21"
     propagate "^2.0.0"
 
 node-fetch@^2.6.7:
