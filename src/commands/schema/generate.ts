@@ -4,12 +4,13 @@ import {Flags} from '@oclif/core'
 import {createGenerator, Schema} from 'ts-json-schema-generator'
 import {SnapshotCommand} from '../../snapshot-command'
 import {red} from 'chalk'
+import {getSchemaFileName} from '../../util'
 
 export type SchemasMap = {
   [key: string]: Schema;
 }
 
-export type Schemas = { commands: SchemasMap; hooks: SchemasMap}
+export type Schemas = { commands: SchemasMap; hooks: SchemasMap }
 
 export type GenerateResponse = string[];
 
@@ -128,7 +129,7 @@ export class SchemaGenerator {
 
     const hooks = this.base.config.pjson.oclif?.hooks ?? {}
     const hookId = Object.keys(hooks).find(key => {
-      const hookFiles = (Array.isArray(hooks[key]) ? hooks[key] : [hooks[key]])as string[]
+      const hookFiles = (Array.isArray(hooks[key]) ? hooks[key] : [hooks[key]]) as string[]
       const hookFileNames = hookFiles.map(f => path.basename(f).split('.')[0])
       const currentFileName = path.basename(file).split('.')[0]
       return hookFileNames.includes(currentFileName)
@@ -183,58 +184,58 @@ export class SchemaGenerator {
 }
 
 export default class SchemaGenerate extends SnapshotCommand {
-    public static flags = {
-      filepath: Flags.string({
-        description: 'directory to save the generated schema files; can use "{version}" to insert the current CLI/plugin version',
-        default: './schemas',
-      }),
-      singlefile: Flags.boolean({
-        description: 'put generated schema into a single file',
-        default: false,
-      }),
-      ignorevoid: Flags.boolean({
-        description: 'ignore commands that return void',
-        default: true,
-      }),
-    };
+  public static flags = {
+    filepath: Flags.string({
+      description: 'directory to save the generated schema files; can use "{version}" to insert the current CLI/plugin version',
+      default: './schemas',
+    }),
+    singlefile: Flags.boolean({
+      description: 'put generated schema into a single file',
+      default: false,
+    }),
+    ignorevoid: Flags.boolean({
+      description: 'ignore commands that return void',
+      default: true,
+    }),
+  }
 
-    public async run(): Promise<GenerateResponse> {
-      const {flags} = await this.parse(SchemaGenerate)
-      const generator = new SchemaGenerator(this, flags.ignorevoid)
+  public async run(): Promise<GenerateResponse> {
+    const {flags} = await this.parse(SchemaGenerate)
+    const generator = new SchemaGenerator(this, flags.ignorevoid)
 
-      const schemas = await generator.generate()
+    const schemas = await generator.generate()
 
-      const directory = flags.filepath.replace('{version}', this.config.version)
-      fs.mkdirSync(directory, {recursive: true})
+    const directory = flags.filepath.replace('{version}', this.config.version)
+    fs.mkdirSync(directory, {recursive: true})
 
-      const files: string[] = []
-      if (flags.singlefile) {
-        const filePath = path.join(directory, 'schema.json')
-        fs.writeFileSync(filePath, JSON.stringify(schemas, null, 2))
+    const files: string[] = []
+    if (flags.singlefile) {
+      const filePath = path.join(directory, 'schema.json')
+      fs.writeFileSync(filePath, JSON.stringify(schemas, null, 2))
+      this.log(`Generated JSON schema file "${filePath}"`)
+      files.push(filePath)
+    } else {
+      for (const [cmdId, schema] of Object.entries(schemas.commands)) {
+        const fileName = getSchemaFileName(cmdId)
+        const filePath = path.join(directory, fileName)
+        fs.writeFileSync(filePath, JSON.stringify(schema, null, 2))
         this.log(`Generated JSON schema file "${filePath}"`)
         files.push(filePath)
-      } else {
-        for (const [cmdId, schema] of Object.entries(schemas.commands)) {
-          const fileName = `${cmdId.replace(/:/g, '-')}.json`
-          const filePath = path.join(directory, fileName)
+      }
+
+      if (Object.values(schemas.hooks).length > 0) {
+        const hooksDir = path.join(directory, 'hooks')
+        fs.mkdirSync(hooksDir, {recursive: true})
+        for (const [hookId, schema] of Object.entries(schemas.hooks)) {
+          const fileName = getSchemaFileName(hookId)
+          const filePath = path.join(hooksDir, fileName)
           fs.writeFileSync(filePath, JSON.stringify(schema, null, 2))
           this.log(`Generated JSON schema file "${filePath}"`)
           files.push(filePath)
         }
-
-        if (Object.values(schemas.hooks).length > 0) {
-          const hooksDir = path.join(directory, 'hooks')
-          fs.mkdirSync(hooksDir, {recursive: true})
-          for (const [hookId, schema] of Object.entries(schemas.hooks)) {
-            const fileName = `${hookId.replace(/:/g, '-')}.json`
-            const filePath = path.join(hooksDir, fileName)
-            fs.writeFileSync(filePath, JSON.stringify(schema, null, 2))
-            this.log(`Generated JSON schema file "${filePath}"`)
-            files.push(filePath)
-          }
-        }
       }
-
-      return files
     }
+
+    return files
+  }
 }

@@ -8,6 +8,7 @@ import {Schema} from 'ts-json-schema-generator'
 import {SnapshotCommand} from '../../snapshot-command'
 import {getAllFiles, SchemaGenerator, Schemas} from './generate'
 import {bold, cyan, red, underline} from 'chalk'
+import {getKeyNameFromFilename} from '../../util'
 
 export type SchemaComparison = Array<{ op: Operation; path: (string | number)[]; value: any }>
 
@@ -122,7 +123,7 @@ export default class SchemaCompare extends SnapshotCommand {
     } else {
       for (const file of schemaFiles) {
         const schema = JSON.parse(fs.readFileSync(file).toString('utf8')) as Schema
-        const key = path.basename(file.replace(/-/g, ':')).replace('.json', '')
+        const key = path.basename(getKeyNameFromFilename(file))
         if (file.split(path.sep).includes('hooks')) {
           schemas.hooks[key] = schema
         } else {
