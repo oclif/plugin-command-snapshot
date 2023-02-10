@@ -1,4 +1,3 @@
-import * as path from 'path'
 
 /**
  * Get the file name for a given command ID replacing "-" with "__" and ":" with "-"
@@ -16,7 +15,7 @@ export const getSchemaFileName = (cmdId: string): string => {
  * @returns {string} - command ID
  */
 export const  getKeyNameFromFilename = (file: string): string => {
-  return path.basename(file.replace(/-/g, ':'))
+  return file.replace(/-/g, ':')
   .replace(/__/g, '-')
   .replace('.json', '')
 }
