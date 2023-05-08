@@ -19,7 +19,7 @@ export default class Generate extends SnapshotCommand {
       const resultCommands = this.entries
       const duplicated = resultCommands.find(command => command.flags.length > 1 && new Set(command.chars).size !== command.chars.length)
       if (duplicated) {
-        throw new Error(`Command "${duplicated.command}" has duplicate chars "${duplicated.chars.filter((item, index) => duplicated.chars.indexOf(item) !== index)}"`)
+        throw new Error(`Command "${duplicated.command}" has duplicate short-flag characters "${duplicated.chars.filter((item, index) => duplicated.chars.indexOf(item) !== index)}"`)
       }
 
       const filePath = flags.filepath.replace('{version}', this.config.version)

@@ -122,7 +122,7 @@ export default class Compare extends SnapshotCommand {
         printCommandDiff(command.alias, 'Aliases')
       }
 
-      this.log(`${EOL}Command, flag, or alias differences detected. If intended, please update the snapshot file and run again.`)
+      this.log(`${EOL}Command, flag, flag characters, or alias differences detected. If intended, please update the snapshot file and run again.`)
 
       // Check if existent commands, or properties (flags, aliases) have been deleted
       if (removedCommands.length > 0 || removedProperties.length > 0) {
