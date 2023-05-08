@@ -14,6 +14,7 @@ interface Change {
 
 type CommandChange = {
   plugin: string;
+  chars: Change[];
   flags: Change[];
   alias: Change[];
 } & Change;
@@ -53,18 +54,24 @@ export default class Compare extends SnapshotCommand {
         if (updatedCommand) {
           const changedFlags = this.diffCommandProperty(initialCommand.flags, updatedCommand.flags).changedProperty
           const changedAlias = this.diffCommandProperty(initialCommand.alias, updatedCommand.alias).changedProperty
+          const changedChars = this.diffCommandProperty(initialCommand.chars, updatedCommand.chars).changedProperty
           const flagsChanged = changedFlags.length > 0
           const aliasChanged = changedAlias.length > 0
+          const charsChanged = changedChars.length > 0
 
           if (aliasChanged) {
             updatedCommand.alias = changedAlias
+          }
+
+          if (charsChanged) {
+            updatedCommand.chars = changedChars
           }
 
           if (flagsChanged) {
             updatedCommand.flags = changedFlags
           }
 
-          if (flagsChanged || aliasChanged) {
+          if (flagsChanged || aliasChanged || charsChanged) {
             diffCommands.push(updatedCommand)
           }
         } else {
@@ -111,6 +118,7 @@ export default class Compare extends SnapshotCommand {
       for (const command of diffCommands) {
         this.log(`\t${command.name}`)
         printCommandDiff(command.flags, 'Flags')
+        printCommandDiff(command.chars, 'Short Flags')
         printCommandDiff(command.alias, 'Aliases')
       }
 
@@ -122,18 +130,6 @@ export default class Compare extends SnapshotCommand {
       }
 
       return {addedCommands, removedCommands, removedFlags: removedCommands, diffCommands}
-    }
-
-    /**
-     * @deprecated in favor of diffCommandProperty
-   * Compares a flag snapshot with the current command's flags
-   * @param {string[]} initialFlags Flag list from the snapshot
-   * @param {string[]} updatedFlags Flag list from runtime
-   * @return {boolean} true if no changes, false otherwise
-   */
-    public diffCommandFlags(initialFlags: string[], updatedFlags: Change[]): { addedFlags: string[]; removedFlags: string[]; updatedFlags: Change[]; changedFlags: Change[] } {
-      const diffedFlags = this.diffCommandProperty(initialFlags, updatedFlags)
-      return {addedFlags: diffedFlags.addedProperty, removedFlags: diffedFlags.removedProperty, updatedFlags: diffedFlags.updated, changedFlags: diffedFlags.changedProperty}
     }
 
     /**
@@ -172,6 +168,8 @@ export default class Compare extends SnapshotCommand {
           plugin: command.pluginName || '',
           flags: Object.entries(command.flags).map(flagName => ({name: flagName[0]})),
           alias: command.aliases.map(alias => ({name: alias})),
+          // we can assert as string because of the filter
+          chars: Object.values(command.flags).map(flag => flag.char).filter(char => typeof char === 'string').map(char => ({name: char as string})),
         }
       })
     }

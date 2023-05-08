@@ -28,13 +28,20 @@
           "items": {
             "type": "string"
           }
+        },
+        "chars": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
         "command",
         "plugin",
         "flags",
-        "alias"
+        "alias",
+        "chars"
       ],
       "additionalProperties": false
     }

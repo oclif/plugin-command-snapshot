@@ -41,6 +41,27 @@
               "plugin": {
                 "type": "string"
               },
+              "chars": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "removed": {
+                      "type": "boolean"
+                    },
+                    "added": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false
+                }
+              },
               "flags": {
                 "type": "array",
                 "items": {
@@ -86,6 +107,7 @@
             },
             "required": [
               "alias",
+              "chars",
               "flags",
               "name",
               "plugin"
