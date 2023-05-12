@@ -17,9 +17,19 @@ export default class Generate extends SnapshotCommand {
       const {flags} = await this.parse(Generate)
 
       const resultCommands = this.entries
-      const duplicated = resultCommands.find(command => command.flags.length > 1 && new Set(command.chars).size !== command.chars.length)
-      if (duplicated) {
-        throw new Error(`Command "${duplicated.command}" has duplicate short-flag characters "${duplicated.chars.filter((item, index) => duplicated.chars.indexOf(item) !== index)}"`)
+
+      const duplicatedChar = resultCommands.find(command => command.flags.length > 1 && new Set(command.flagChars).size !== command.flagChars.length)
+      if (duplicatedChar) {
+        throw new Error(`Command "${duplicatedChar.command}" has duplicate short-flag characters "${duplicatedChar.flagChars.filter((item, index) => duplicatedChar.flagChars.indexOf(item) !== index)}"`)
+      }
+
+      const charCommandConflict = resultCommands.find(command => command.flags.length > 1 && new Set([...command.flags, ...command.flagAliases]).size !== [...command.flags, ...command.flagAliases].length)
+
+      if (charCommandConflict) {
+        // will be defined because we just found this above
+        const problemChar = charCommandConflict.flagAliases.find(char => charCommandConflict.flags.indexOf(char)) as string
+        const fullFlags  = this.commands.find(command => command.id === charCommandConflict.command)
+        throw new Error(`Command "${charCommandConflict.command}" has conflict between flag  "${problemChar}" and an alias with ${Object.values(fullFlags?.flags ?? []).find(allFlags => allFlags.aliases?.includes(problemChar))?.name} `)
       }
 
       const filePath = flags.filepath.replace('{version}', this.config.version)
