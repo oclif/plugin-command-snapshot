@@ -1,3 +1,12 @@
+## [3.3.15](https://github.com/oclif/plugin-command-snapshot/compare/3.3.14...3.3.15) (2023-05-13)
+
+
+### Bug Fixes
+
+* **deps:** bump semver and @types/semver ([35afd1b](https://github.com/oclif/plugin-command-snapshot/commit/35afd1b990586b000b9f3c0f3f58775dff8ac9bf))
+
+
+
 ## [3.3.14](https://github.com/oclif/plugin-command-snapshot/compare/3.3.13...3.3.14) (2023-05-06)
 
 
