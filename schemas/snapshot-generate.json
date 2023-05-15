@@ -29,7 +29,13 @@
             "type": "string"
           }
         },
-        "chars": {
+        "flagChars": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "flagAliases": {
           "type": "array",
           "items": {
             "type": "string"
@@ -41,7 +47,8 @@
         "plugin",
         "flags",
         "alias",
-        "chars"
+        "flagChars",
+        "flagAliases"
       ],
       "additionalProperties": false
     }
