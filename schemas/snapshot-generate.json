@@ -28,13 +28,27 @@
           "items": {
             "type": "string"
           }
+        },
+        "flagChars": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "flagAliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
         "command",
         "plugin",
         "flags",
-        "alias"
+        "alias",
+        "flagChars",
+        "flagAliases"
       ],
       "additionalProperties": false
     }

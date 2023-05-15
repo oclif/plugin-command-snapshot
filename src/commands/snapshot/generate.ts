@@ -17,6 +17,19 @@ export default class Generate extends SnapshotCommand {
       const {flags} = await this.parse(Generate)
 
       const resultCommands = this.entries
+
+      const duplicatedChar = resultCommands.find(command => command.flags.length > 1 && new Set(command.flagChars).size !== command.flagChars.length)
+      if (duplicatedChar) {
+        throw new Error(`Command "${duplicatedChar.command}" has duplicate short-flag characters "${duplicatedChar.flagChars.filter((item, index) => duplicatedChar.flagChars.indexOf(item) !== index)}"`)
+      }
+
+      const charConflictCommand = resultCommands.find(command => command.flags.length > 1 && new Set([...command.flags, ...command.flagChars, ...command.flagAliases]).size !== [...command.flags, ...command.flagChars, ...command.flagAliases].length)
+
+      if (charConflictCommand) {
+        const conflictFlags = [...charConflictCommand.flags, ...charConflictCommand.flagChars, ...charConflictCommand.flagAliases].filter((item, index, array) => array.indexOf(item) !== index)
+        throw new Error(`Command "${charConflictCommand.command}" has conflicting flags "${conflictFlags}"`)
+      }
+
       const filePath = flags.filepath.replace('{version}', this.config.version)
 
       fs.writeFileSync(filePath, JSON.stringify(resultCommands, null, numberOfSpaceChar))

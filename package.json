@@ -1,7 +1,7 @@
 {
   "name": "@oclif/plugin-command-snapshot",
   "description": "generates and compares OCLIF plugins snapshot files",
-  "version": "3.3.15",
+  "version": "4.0.0",
   "author": "Salesforce",
   "bugs": "https://github.com/oclif/plugin-command-snapshot/issues",
   "dependencies": {
@@ -35,7 +35,7 @@
     "typescript": "^4.9.5"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=16.0.0"
   },
   "files": [
     "/lib",

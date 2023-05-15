@@ -4,7 +4,10 @@
         "plugin": "@oclif/plugin-command-snapshot",
         "flags": [
             "filepath"
-        ]
+        ],
+        "alias": [],
+        "flagChars": [],
+        "flagAliases": []
     },
     {
         "command": "schema:generate",
@@ -13,20 +16,29 @@
             "filepath",
             "ignorevoid",
             "singlefile"
-        ]
+        ],
+        "alias": [],
+        "flagChars": [],
+        "flagAliases": []
     },
     {
         "command": "snapshot:compare",
         "plugin": "@oclif/plugin-command-snapshot",
         "flags": [
             "filepath"
-        ]
+        ],
+        "alias": [],
+        "flagChars": [],
+        "flagAliases": []
     },
     {
         "command": "snapshot:generate",
         "plugin": "@oclif/plugin-command-snapshot",
         "flags": [
             "filepath"
-        ]
+        ],
+        "alias": [],
+        "flagChars": [],
+        "flagAliases": []
     }
 ]
