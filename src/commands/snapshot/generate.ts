@@ -23,13 +23,11 @@ export default class Generate extends SnapshotCommand {
         throw new Error(`Command "${duplicatedChar.command}" has duplicate short-flag characters "${duplicatedChar.flagChars.filter((item, index) => duplicatedChar.flagChars.indexOf(item) !== index)}"`)
       }
 
-      const charCommandConflict = resultCommands.find(command => command.flags.length > 1 && new Set([...command.flags, ...command.flagAliases]).size !== [...command.flags, ...command.flagAliases].length)
+      const charConflictCommand = resultCommands.find(command => command.flags.length > 1 && new Set([...command.flags, ...command.flagChars, ...command.flagAliases]).size !== [...command.flags, ...command.flagChars, ...command.flagAliases].length)
 
-      if (charCommandConflict) {
-        // will be defined because we just found this above
-        const problemChar = charCommandConflict.flagAliases.find(char => charCommandConflict.flags.indexOf(char)) as string
-        const fullFlags  = this.commands.find(command => command.id === charCommandConflict.command)
-        throw new Error(`Command "${charCommandConflict.command}" has conflict between flag  "${problemChar}" and an alias with ${Object.values(fullFlags?.flags ?? []).find(allFlags => allFlags.aliases?.includes(problemChar))?.name} `)
+      if (charConflictCommand) {
+        const conflictFlags = [...charConflictCommand.flags, ...charConflictCommand.flagChars, ...charConflictCommand.flagAliases].filter((item, index, array) => array.indexOf(item) !== index)
+        throw new Error(`Command "${charConflictCommand.command}" has conflicting flags "${conflictFlags}"`)
       }
 
       const filePath = flags.filepath.replace('{version}', this.config.version)
