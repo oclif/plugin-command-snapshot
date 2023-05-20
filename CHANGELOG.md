@@ -1,3 +1,16 @@
+## [4.0.2](https://github.com/oclif/plugin-command-snapshot/compare/4.0.1...4.0.2) (2023-05-20)
+
+
+### Bug Fixes
+
+* **deps:** bump tslib from 2.5.0 to 2.5.2 ([7d66c70](https://github.com/oclif/plugin-command-snapshot/commit/7d66c70b9c935aeedac55b9133adafbce57de90a))
+
+
+
+## [4.0.1](https://github.com/oclif/plugin-command-snapshot/compare/3.3.15...4.0.1) (2023-05-15)
+
+
+
 ## [3.3.15](https://github.com/oclif/plugin-command-snapshot/compare/3.3.14...3.3.15) (2023-05-13)
 
 
