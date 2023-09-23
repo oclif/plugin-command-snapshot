@@ -29,7 +29,7 @@
     "husky": "6",
     "mocha": "^8",
     "nyc": "^15",
-    "oclif": "^3.16.0",
+    "oclif": "^3.17.1",
     "sinon": "^11.1.2",
     "ts-node": "^10",
     "typescript": "^4.9.5"
