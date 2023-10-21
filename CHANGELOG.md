@@ -1,3 +1,12 @@
+## [4.0.15](https://github.com/oclif/plugin-command-snapshot/compare/4.0.14...4.0.15) (2023-10-21)
+
+
+### Bug Fixes
+
+* **deps:** bump ts-json-schema-generator from 1.3.0 to 1.4.0 ([e713bd1](https://github.com/oclif/plugin-command-snapshot/commit/e713bd1870831a14c83328a3d75e8258ef095546))
+
+
+
 ## [4.0.14](https://github.com/oclif/plugin-command-snapshot/compare/4.0.13...4.0.14) (2023-08-20)
 
 
