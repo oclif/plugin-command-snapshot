@@ -1,13 +1,14 @@
 import {expect, test} from '@oclif/test'
-import * as fs from 'fs'
-import * as sinon from 'sinon'
+import sinon from 'sinon'
+
+import SnapshotCommand from '../../src/snapshot-command.js'
 
 const sandbox = sinon.createSandbox()
-let writeFileStub: any
+let writeFileStub: sinon.SinonStub
 
 describe('snapshot:generate', () => {
   beforeEach(() => {
-    writeFileStub = sandbox.stub(fs, 'writeFileSync')
+    writeFileStub = sandbox.stub(SnapshotCommand.prototype, 'write')
   })
 
   afterEach(() => {
@@ -15,11 +16,11 @@ describe('snapshot:generate', () => {
   })
 
   test
-  .stdout()
-  .command(['snapshot:generate'])
-  .it('runs command to generate snapshot file', ctx => {
-    expect(writeFileStub.calledOnce).to.be.true
-    expect(writeFileStub.getCall(0).firstArg).to.equal('./command-snapshot.json')
-    expect(ctx.stdout).to.contain('Generated snapshot file')
-  })
+    .stdout()
+    .command(['snapshot:generate'])
+    .it('runs command to generate snapshot file', (ctx) => {
+      expect(writeFileStub.calledOnce).to.be.true
+      expect(writeFileStub.getCall(0).firstArg).to.equal('./command-snapshot.json')
+      expect(ctx.stdout).to.contain('Generated snapshot file')
+    })
 })

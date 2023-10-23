@@ -1,11 +1,10 @@
-
 /**
  * Get the file name for a given command ID replacing "-" with "__" and ":" with "-"
  * @param cmdId - command ID
  * @returns {string} - file name
  */
 export const getSchemaFileName = (cmdId: string): string => {
-  const baseName = cmdId.replace(/-/g, '__').replace(/:/g, '-')
+  const baseName = cmdId.replaceAll('-', '__').replaceAll(':', '-')
   return `${baseName}.json`
 }
 
@@ -14,8 +13,5 @@ export const getSchemaFileName = (cmdId: string): string => {
  * @param file - file name
  * @returns {string} - command ID
  */
-export const  getKeyNameFromFilename = (file: string): string => {
-  return file.replace(/-/g, ':')
-  .replace(/__/g, '-')
-  .replace('.json', '')
-}
+export const getKeyNameFromFilename = (file: string): string =>
+  file.replaceAll('-', ':').replaceAll('__', '-').replace('.json', '')

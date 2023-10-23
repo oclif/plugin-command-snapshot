@@ -13,29 +13,18 @@
           "path": {
             "type": "array",
             "items": {
-              "type": [
-                "string",
-                "number"
-              ]
+              "type": ["number", "string"]
             }
           },
           "value": {}
         },
-        "required": [
-          "op",
-          "path",
-          "value"
-        ],
+        "required": ["op", "path", "value"],
         "additionalProperties": false
       }
     },
     "Operation": {
       "type": "string",
-      "enum": [
-        "add",
-        "replace",
-        "remove"
-      ]
+      "enum": ["add", "replace", "remove"]
     }
   }
 }

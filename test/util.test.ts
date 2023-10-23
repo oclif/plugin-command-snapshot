@@ -1,6 +1,6 @@
 import {expect} from '@oclif/test'
-import {getKeyNameFromFilename} from '../src/util'
-import {getSchemaFileName} from '../lib/util'
+
+import {getKeyNameFromFilename, getSchemaFileName} from '../src/util.js'
 
 describe('util test', () => {
   describe('getKeyNameFromFilename', () => {

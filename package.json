@@ -5,44 +5,54 @@
   "author": "Salesforce",
   "bugs": "https://github.com/oclif/plugin-command-snapshot/issues",
   "dependencies": {
-    "@oclif/core": "^2.11.8",
-    "chalk": "^4.1.2",
+    "@oclif/core": "^3.5.0",
+    "@types/lodash.difference": "^4.5.8",
+    "chalk": "^5.3.0",
     "just-diff": "^5.2.0",
-    "lodash": "^4.17.21",
+    "lodash.difference": "^4.5.0",
+    "lodash.get": "^4.4.2",
+    "lodash.sortby": "^4.7.0",
     "semver": "^7.5.4",
-    "ts-json-schema-generator": "^1.4.0",
-    "tslib": "^2.6.2"
+    "ts-json-schema-generator": "^1.4.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^12.1.4",
+    "@commitlint/config-conventional": "^18.0.0",
     "@oclif/plugin-help": "^5.2.20",
-    "@oclif/test": "^2.5.6",
+    "@oclif/prettier-config": "^0.2.1",
+    "@oclif/test": "^3.0.2",
     "@types/chai": "^4.3.9",
-    "@types/mocha": "^8",
-    "@types/node": "^15",
+    "@types/lodash.get": "^4.4.8",
+    "@types/lodash.sortby": "^4.7.8",
+    "@types/mocha": "^10.0.3",
+    "@types/node": "^18",
     "@types/semver": "^7.5.4",
     "chai": "^4",
-    "commitlint": "^12.1.4",
-    "eslint": "^7.32.0",
-    "eslint-config-oclif": "^4",
-    "eslint-config-oclif-typescript": "^1.0.3",
-    "husky": "6",
-    "mocha": "^8",
+    "commitlint": "^18.0.0",
+    "eslint": "^8.52.0",
+    "eslint-config-oclif": "^5.0.0",
+    "eslint-config-oclif-typescript": "^3.0.8",
+    "eslint-config-prettier": "^9.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.2",
+    "mocha": "^10.2.0",
     "nyc": "^15",
-    "oclif": "^3.17.2",
-    "sinon": "^11.1.2",
-    "ts-node": "^10",
-    "typescript": "^4.9.5"
+    "oclif": "^4.0.3",
+    "prettier": "^3.0.3",
+    "sinon": "^17.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
+  "exports": "./lib/index.js",
   "files": [
     "/lib",
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json",
     "/schemas",
-    "/yarn.lock"
+    "/yarn.lock",
+    "/oclif.lock"
   ],
   "homepage": "https://github.com/oclif/plugin-command-snapshot",
   "keywords": [
@@ -62,16 +72,21 @@
     },
     "devPlugins": [
       "@oclif/plugin-help"
-    ]
+    ],
+    "flexibleTaxonomy": true,
+    "topicSeparator": " "
   },
   "repository": "oclif/plugin-command-snapshot",
   "scripts": {
     "build": "rm -rf lib && tsc -b",
     "commitlint": "commitlint",
-    "postpack": "rm -f oclif.manifest.json",
-    "posttest": "eslint . --ext .ts --config .eslintrc",
-    "prepack": "rm -rf lib && tsc -b && oclif manifest . && oclif readme",
+    "lint": "eslint . --ext .ts",
+    "postpack": "rm -f oclif.lock oclif.manifest.json",
+    "posttest": "yarn lint",
+    "prepack": "rm -rf lib && tsc -b oclif lock && && oclif manifest . && oclif readme",
+    "prepare": "husky install",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\" --timeout 20000",
     "version": "oclif readme && git add README.md"
-  }
+  },
+  "type": "module"
 }

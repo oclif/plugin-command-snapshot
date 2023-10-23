@@ -1,33 +1,35 @@
-import * as path from 'path'
-import * as fs from 'fs'
-import * as semver from 'semver'
-import {get} from 'lodash'
-import {diff, Operation} from 'just-diff'
 import {Flags, toConfiguredId} from '@oclif/core'
+import chalk from 'chalk'
+import {Operation, diff} from 'just-diff'
+import get from 'lodash.get'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+import * as semver from 'semver'
 import {Schema} from 'ts-json-schema-generator'
-import {SnapshotCommand} from '../../snapshot-command'
-import {getAllFiles, SchemaGenerator, Schemas} from './generate'
-import {bold, cyan, red, underline} from 'chalk'
-import {getKeyNameFromFilename} from '../../util'
 
-export type SchemaComparison = Array<{ op: Operation; path: (string | number)[]; value: any }>
+import SnapshotCommand from '../../snapshot-command.js'
+import {getKeyNameFromFilename} from '../../util.js'
+import {SchemaGenerator, Schemas, getAllFiles} from './generate.js'
 
-function isNumber(n: string | number): boolean {
+export type SchemaComparison = Array<{op: Operation; path: (number | string)[]; value: unknown}>
+
+function isNumber(n: number | string | undefined): boolean {
   return Number.isInteger(Number(n))
 }
 
-function isMeaningless(n: string | number): boolean {
-  const meaninglessKeys: Array<string | number> = ['$comment', '__computed']
+function isMeaningless(n: number | string | undefined): boolean {
+  if (!n) return true
+  const meaninglessKeys: Array<number | string> = ['$comment', '__computed']
   return meaninglessKeys.includes(n)
 }
 
 export default class SchemaCompare extends SnapshotCommand {
   public static flags = {
     filepath: Flags.string({
-      description: 'path of the generated snapshot file',
       default: './schemas',
+      description: 'path of the generated snapshot file',
     }),
-  };
+  }
 
   public async run(): Promise<SchemaComparison> {
     const {flags} = await this.parse(SchemaCompare)
@@ -40,14 +42,14 @@ export default class SchemaCompare extends SnapshotCommand {
     }
 
     const existingSchema = this.readExistingSchema(flags.filepath)
-    const latestSchema = (await this.generateLatestSchema())
+    const latestSchema = await this.generateLatestSchema()
     this.debug('existingSchema', existingSchema)
     this.debug('latestSchema', latestSchema)
     const changes = diff(latestSchema, existingSchema)
 
     const humanReadableChanges: Record<string, string[]> = {}
     for (const change of changes) {
-      const lastPathElement = change.path[change.path.length - 1]
+      const lastPathElement = change.path.at(-1)
       if (isMeaningless(lastPathElement)) continue
 
       const objPath = change.path.join('.')
@@ -64,25 +66,34 @@ export default class SchemaCompare extends SnapshotCommand {
       const basePath = lastElementIsNum ? readablePath.replace(`.${lastPathElement}`, '') : readablePath
 
       switch (change.op) {
-      case 'replace':
-        humanReadableChanges[commandId].push(`${underline(readablePath)} was changed from ${cyan(existing)} to ${cyan(latest)}`)
-        break
-      case 'add':
-        humanReadableChanges[commandId].push(
-          lastElementIsNum ?
-            `Array item at ${underline(basePath)} was ${cyan('added')} to latest schema` :
-            `${underline(readablePath)} was ${cyan('added')} to latest schema`,
-        )
-        break
-      case 'remove':
-        humanReadableChanges[commandId].push(
-          lastElementIsNum ?
-            `Array item at ${underline(basePath)} was ${cyan('not found')} in latest schema` :
-            `${underline(readablePath)} was ${cyan('not found')} in latest schema`,
-        )
-        break
-      default:
-        break
+        case 'replace': {
+          humanReadableChanges[commandId].push(
+            `${chalk.underline(readablePath)} was changed from ${chalk.cyan(existing)} to ${chalk.cyan(latest)}`,
+          )
+          break
+        }
+
+        case 'add': {
+          humanReadableChanges[commandId].push(
+            lastElementIsNum
+              ? `Array item at ${chalk.underline(basePath)} was ${chalk.cyan('added')} to latest schema`
+              : `${chalk.underline(readablePath)} was ${chalk.cyan('added')} to latest schema`,
+          )
+          break
+        }
+
+        case 'remove': {
+          humanReadableChanges[commandId].push(
+            lastElementIsNum
+              ? `Array item at ${chalk.underline(basePath)} was ${chalk.cyan('not found')} in latest schema`
+              : `${chalk.underline(readablePath)} was ${chalk.cyan('not found')} in latest schema`,
+          )
+          break
+        }
+
+        default: {
+          break
+        }
       }
     }
 
@@ -92,10 +103,10 @@ export default class SchemaCompare extends SnapshotCommand {
     }
 
     this.log()
-    this.log(bold(red('Found the following schema changes:')))
+    this.log(chalk.bold.red('Found the following schema changes:'))
     for (const [commandId, changes] of Object.entries(humanReadableChanges)) {
       this.log()
-      this.log(bold(commandId))
+      this.log(chalk.bold(commandId))
       for (const change of changes) {
         this.log(`  - ${change}`)
       }
@@ -103,14 +114,22 @@ export default class SchemaCompare extends SnapshotCommand {
 
     this.log()
     const bin = process.platform === 'win32' ? 'bin\\dev.cmd' : 'bin/dev'
-    this.log('If intended, please update the schema file(s) and run again:', bold(`${bin} ${toConfiguredId('schema:generate', this.config)}`))
+    this.log(
+      'If intended, please update the schema file(s) and run again:',
+      chalk.bold(`${bin} ${toConfiguredId('schema:generate', this.config)}`),
+    )
     process.exitCode = 1
     return changes
   }
 
+  private async generateLatestSchema(): Promise<Schemas> {
+    const generator = new SchemaGenerator(this)
+    return generator.generate()
+  }
+
   private readExistingSchema(filePath: string): Schemas {
     const contents = fs.readdirSync(filePath)
-    const folderIsVersioned = contents.every(c => semver.valid(c))
+    const folderIsVersioned = contents.every((c) => semver.valid(c))
     const schemasDir = folderIsVersioned ? path.join(filePath, semver.rsort(contents)[0] || '') : filePath
     const schemaFiles = getAllFiles(schemasDir, '.json')
 
@@ -133,10 +152,5 @@ export default class SchemaCompare extends SnapshotCommand {
     }
 
     return schemas
-  }
-
-  private async generateLatestSchema(): Promise<Schemas> {
-    const generator = new SchemaGenerator(this)
-    return generator.generate()
   }
 }

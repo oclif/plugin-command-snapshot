@@ -11,6 +11,85 @@
             "type": "string"
           }
         },
+        "diffCommands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "added": {
+                "type": "boolean"
+              },
+              "name": {
+                "type": "string"
+              },
+              "removed": {
+                "type": "boolean"
+              },
+              "alias": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "added": {
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "removed": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": ["name"],
+                  "additionalProperties": false
+                }
+              },
+              "chars": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "added": {
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "removed": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": ["name"],
+                  "additionalProperties": false
+                }
+              },
+              "flags": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "added": {
+                      "type": "boolean"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "removed": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": ["name"],
+                  "additionalProperties": false
+                }
+              },
+              "plugin": {
+                "type": "string"
+              }
+            },
+            "required": ["alias", "chars", "flags", "name", "plugin"]
+          }
+        },
         "removedCommands": {
           "type": "array",
           "items": {
@@ -21,97 +100,6 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
-        },
-        "diffCommands": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "removed": {
-                "type": "boolean"
-              },
-              "added": {
-                "type": "boolean"
-              },
-              "plugin": {
-                "type": "string"
-              },
-              "chars": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "removed": {
-                      "type": "boolean"
-                    },
-                    "added": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": [
-                    "name"
-                  ],
-                  "additionalProperties": false
-                }
-              },
-              "flags": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "removed": {
-                      "type": "boolean"
-                    },
-                    "added": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": [
-                    "name"
-                  ],
-                  "additionalProperties": false
-                }
-              },
-              "alias": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "removed": {
-                      "type": "boolean"
-                    },
-                    "added": {
-                      "type": "boolean"
-                    }
-                  },
-                  "required": [
-                    "name"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            },
-            "required": [
-              "alias",
-              "chars",
-              "flags",
-              "name",
-              "plugin"
-            ]
           }
         }
       },
