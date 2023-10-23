@@ -11,19 +11,16 @@
     "SnapshotEntry": {
       "type": "object",
       "properties": {
-        "command": {
-          "type": "string"
-        },
-        "plugin": {
-          "type": "string"
-        },
-        "flags": {
+        "alias": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "alias": {
+        "command": {
+          "type": "string"
+        },
+        "flagAliases": {
           "type": "array",
           "items": {
             "type": "string"
@@ -35,21 +32,17 @@
             "type": "string"
           }
         },
-        "flagAliases": {
+        "flags": {
           "type": "array",
           "items": {
             "type": "string"
           }
+        },
+        "plugin": {
+          "type": "string"
         }
       },
-      "required": [
-        "command",
-        "plugin",
-        "flags",
-        "alias",
-        "flagChars",
-        "flagAliases"
-      ],
+      "required": ["alias", "command", "flagAliases", "flagChars", "flags", "plugin"],
       "additionalProperties": false
     }
   }

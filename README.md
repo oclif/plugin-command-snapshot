@@ -1,5 +1,4 @@
-@oclif/plugin-command-snapshot
-========
+# @oclif/plugin-command-snapshot
 
 Generates and compares OCLIF plugins snapshot files
 
@@ -9,12 +8,15 @@ Generates and compares OCLIF plugins snapshot files
 [![License](https://img.shields.io/npm/l/@oclif/plugin-command-snapshot.svg)](https://github.com/nramyasri-sf/@oclif/plugin-command-snapshot/blob/main/package.json)
 
 <!-- toc -->
-* [Usage](#usage)
-* [generates a snapshot file that has a list or commands and flags in the current CLI or plugin](#generates-a-snapshot-file-that-has-a-list-or-commands-and-flags-in-the-current-cli-or-plugin)
-* [compare the current CLI or plugin commands and flags with a snapshot file to identify changes](#compare-the-current-cli-or-plugin-commands-and-flags-with-a-snapshot-file-to-identify-changes)
+
+- [@oclif/plugin-command-snapshot](#oclifplugin-command-snapshot)
+- [Usage](#usage)
+- [generates a snapshot file that has a list or commands and flags in the current CLI or plugin](#generates-a-snapshot-file-that-has-a-list-or-commands-and-flags-in-the-current-cli-or-plugin)
+- [compare the current CLI or plugin commands and flags with a snapshot file to identify changes](#compare-the-current-cli-or-plugin-commands-and-flags-with-a-snapshot-file-to-identify-changes)
 <!-- tocstop -->
 
 # Usage
+
 This plugin is used to take snapshot of commands and flags in OCLIF plugins. These snapshots can be used to enforce a deprecation policy or to keep track of changes.
 
 To include it in your plugin, add it to the `devPlugins` section in your package.json.
@@ -32,12 +34,12 @@ Use the `snapshot:generate` command in your development process.
 
 ```sh-session
 # generates a snapshot file that has a list or commands and flags in the current CLI or plugin
-$ ./bin/run snapshot:generate
+$ ./bin/run.js snapshot:generate
 ```
 
 Use the `snapshot:compare` command in your continuos integration. This command will fail if changes are detected. The snapshot file should be updated and committed to the repository when legitimate changes are made.
 
 ```sh-session
 # compare the current CLI or plugin commands and flags with a snapshot file to identify changes
-$ ./bin/run snapshot:compare
+$ ./bin/run.js snapshot:compare
 ```
