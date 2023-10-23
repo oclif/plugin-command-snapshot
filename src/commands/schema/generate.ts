@@ -110,10 +110,10 @@ export class SchemaGenerator {
     // eslint-disable-next-line unicorn/no-array-reduce
     const hookFiles = Object.values(this.base.config.pjson.oclif?.hooks ?? {}).reduce(
       (x: string[], y: string | string[]) => (Array.isArray(y) ? [...x, ...y] : [...x, y]),
-      [] as string[],
+      [],
     )
     const {outDir, rootDir} = this.getDirs()
-    return (hookFiles as string[]).map((h) => `${path.resolve(h)}.ts`.replace(outDir, rootDir))
+    return hookFiles.map((h) => `${path.resolve(h)}.ts`.replace(outDir, rootDir))
   }
 
   private getDirs(): {outDir: string; rootDir: string} {

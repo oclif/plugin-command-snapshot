@@ -187,7 +187,7 @@ export default class Compare extends SnapshotCommand {
 
   public async run(): Promise<CompareResponse> {
     const {flags} = await this.parse(Compare)
-    const oldCommands = JSON.parse(fs.readFileSync(flags.filepath).toString('utf8')) as SnapshotEntry[]
+    const oldCommands = JSON.parse(fs.readFileSync(flags.filepath, 'utf8')) as SnapshotEntry[]
     const newCommands = this.changed
     return this.compareSnapshot(oldCommands, newCommands)
   }
