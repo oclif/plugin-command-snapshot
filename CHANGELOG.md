@@ -1,3 +1,9 @@
+## [5.0.1](https://github.com/oclif/plugin-command-snapshot/compare/4.0.16...5.0.1) (2023-10-24)
+
+### Bug Fixes
+
+- 5.0.0 release ([72fb9ad](https://github.com/oclif/plugin-command-snapshot/commit/72fb9add6980f110675e1d33431140ddbb14c47d))
+
 ## [4.0.16](https://github.com/oclif/plugin-command-snapshot/compare/4.0.16-dev.1...4.0.16) (2023-10-23)
 
 ## [4.0.16-dev.1](https://github.com/oclif/plugin-command-snapshot/compare/4.0.16-dev.0...4.0.16-dev.1) (2023-10-23)
