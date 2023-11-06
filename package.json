@@ -84,7 +84,7 @@
     "postpack": "rm -f oclif.lock oclif.manifest.json",
     "posttest": "yarn lint",
     "prepack": "rm -rf lib && tsc -b && oclif lock && oclif manifest . && oclif readme",
-    "prepare": "husky install",
+    "prepare": "husky install && yarn build && oclif manifest",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\" --timeout 20000",
     "version": "oclif readme && git add README.md"
   },
