@@ -1,3 +1,9 @@
+## [5.0.2](https://github.com/oclif/plugin-command-snapshot/compare/5.0.1...5.0.2) (2023-11-11)
+
+### Bug Fixes
+
+- **deps:** bump @oclif/core from 3.10.1 to 3.10.8 ([#413](https://github.com/oclif/plugin-command-snapshot/issues/413)) ([39b09dd](https://github.com/oclif/plugin-command-snapshot/commit/39b09dde065f17d1913ad1be36d1995aae4b2c71))
+
 ## [5.0.1](https://github.com/oclif/plugin-command-snapshot/compare/4.0.16...5.0.1) (2023-10-24)
 
 ### Bug Fixes
