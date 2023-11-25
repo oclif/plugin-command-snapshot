@@ -16,7 +16,7 @@
     "ts-json-schema-generator": "^1.4.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^18.4.0",
+    "@commitlint/config-conventional": "^18.4.3",
     "@oclif/plugin-help": "^5.2.20",
     "@oclif/prettier-config": "^0.2.1",
     "@oclif/test": "^3.1.0",
