@@ -1012,10 +1012,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash.difference@^4.5.8":
-  version "4.5.8"
-  resolved "https://registry.yarnpkg.com/@types/lodash.difference/-/lodash.difference-4.5.8.tgz#25acd0acfd3472c61b9d5629b014c21b921905fe"
-  integrity sha512-oamKsq2RK81RuwvG32/E8wRu/ldOz5XH04zeIyFDcJyGeebg17h0WOtyrkhDmINhr/2Noz6geO2AYfnQDxtapQ==
+"@types/lodash.difference@^4.5.9":
+  version "4.5.9"
+  resolved "https://registry.yarnpkg.com/@types/lodash.difference/-/lodash.difference-4.5.9.tgz#69e82a68557779abac489585f43159997cab874c"
+  integrity sha512-MNlajcjtwzLpXk+cw38UkBvEXJNEPhULgS8A4EHwtUwT7f7yFH/SFKD0iw5Rfilwh60yJIgFo0vsMr7xsa5+aw==
   dependencies:
     "@types/lodash" "*"
 
