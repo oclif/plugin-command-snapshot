@@ -1,3 +1,9 @@
+## [5.0.3](https://github.com/oclif/plugin-command-snapshot/compare/5.0.2...5.0.3) (2023-11-26)
+
+### Bug Fixes
+
+- **deps:** bump @types/lodash.difference from 4.5.8 to 4.5.9 ([#421](https://github.com/oclif/plugin-command-snapshot/issues/421)) ([83aeb22](https://github.com/oclif/plugin-command-snapshot/commit/83aeb227e2fd24cfa285b36f78703a461fe17c1d))
+
 ## [5.0.2](https://github.com/oclif/plugin-command-snapshot/compare/5.0.1...5.0.2) (2023-11-11)
 
 ### Bug Fixes
