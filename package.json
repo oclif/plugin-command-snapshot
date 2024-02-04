@@ -33,7 +33,7 @@
     "eslint-config-oclif-typescript": "^3.0.42",
     "eslint-config-prettier": "^9.1.0",
     "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
+    "lint-staged": "^15.2.1",
     "mocha": "^10.2.0",
     "nyc": "^15",
     "oclif": "^4.4.3",
