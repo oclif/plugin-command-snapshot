@@ -36,7 +36,6 @@ export function getAllFiles(dirPath: string, ext: string, allFiles: string[] = [
 export class SchemaGenerator {
   private classToId: Record<string, string> = {}
 
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     private base: SnapshotCommand,
     private ignoreVoid = true,
