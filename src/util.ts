@@ -19,22 +19,20 @@ export const getSchemaFileName = (cmdId: string): string => {
 export const getKeyNameFromFilename = (file: string): string =>
   file.replaceAll('-', ':').replaceAll('__', '-').replace('.json', '')
 
-export function getAllFiles(dirPath: string, ext: string, allFiles: string[] = []): string[] {
-  let files: string[] = []
+export const getAllFiles = (dirPath: string, ext: string, allFiles: string[] = []): string[] =>
+  safeReadDirSync(dirPath)
+    .flatMap((f) =>
+      f.isDirectory() ? getAllFiles(path.join(dirPath, f.name), ext, allFiles) : path.join(dirPath, f.name),
+    )
+    .filter((f) => f.endsWith(ext))
+
+const safeReadDirSync = (dirPath: string): fs.Dirent[] => {
   try {
-    files = fs.readdirSync(dirPath)
-  } catch {}
-
-  for (const file of files) {
-    const fPath = path.join(dirPath, file)
-    if (fs.statSync(fPath).isDirectory()) {
-      allFiles = getAllFiles(fPath, ext, allFiles)
-    } else if (file.endsWith(ext)) {
-      allFiles.push(fPath)
-    }
+    // TODO: use recursive option when available in Node 20
+    return fs.readdirSync(dirPath, {withFileTypes: true})
+  } catch {
+    return []
   }
-
-  return allFiles
 }
 
 export const GLOB_PATTERNS = [
