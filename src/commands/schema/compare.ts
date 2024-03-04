@@ -8,8 +8,8 @@ import * as semver from 'semver'
 import {Schema} from 'ts-json-schema-generator'
 
 import SnapshotCommand from '../../snapshot-command.js'
-import {getKeyNameFromFilename} from '../../util.js'
-import {SchemaGenerator, Schemas, getAllFiles} from './generate.js'
+import {GLOB_PATTERNS, getAllFiles, getKeyNameFromFilename} from '../../util.js'
+import {SchemaGenerator, Schemas} from './generate.js'
 
 export type SchemaComparison = Array<{op: Operation; path: (number | string)[]; value: unknown}>
 
@@ -32,6 +32,25 @@ export default class SchemaCompare extends SnapshotCommand {
   }
 
   public async run(): Promise<SchemaComparison> {
+    const strategy =
+      typeof this.config.pjson.oclif?.commands === 'string' ? 'pattern' : this.config.pjson.oclif?.commands?.strategy
+    const commandsDir =
+      typeof this.config.pjson.oclif?.commands === 'string'
+        ? this.config.pjson.oclif?.commands
+        : this.config.pjson.oclif?.commands?.target
+    const commandGlobs =
+      typeof this.config.pjson.oclif?.commands === 'string'
+        ? GLOB_PATTERNS
+        : this.config.pjson.oclif?.commands?.globPatterns
+
+    if (strategy === 'single') {
+      this.error('This command is not supported for single command CLIs')
+    }
+
+    if (strategy === 'explicit') {
+      this.error('This command is not supported for explicit command discovery')
+    }
+
     const {flags} = await this.parse(SchemaCompare)
 
     try {
@@ -42,7 +61,8 @@ export default class SchemaCompare extends SnapshotCommand {
     }
 
     const existingSchema = this.readExistingSchema(flags.filepath)
-    const latestSchema = await this.generateLatestSchema()
+    const generator = new SchemaGenerator({base: this, commandGlobs, commandsDir})
+    const latestSchema = await generator.generate()
     this.debug('existingSchema', existingSchema)
     this.debug('latestSchema', latestSchema)
     const changes = diff(latestSchema, existingSchema)
@@ -113,18 +133,13 @@ export default class SchemaCompare extends SnapshotCommand {
     }
 
     this.log()
-    const bin = process.platform === 'win32' ? 'bin\\dev.cmd' : 'bin/dev'
+    const bin = process.platform === 'win32' ? 'bin\\dev.cmd' : 'bin/dev.js'
     this.log(
       'If intended, please update the schema file(s) and run again:',
       chalk.bold(`${bin} ${toConfiguredId('schema:generate', this.config)}`),
     )
     process.exitCode = 1
     return changes
-  }
-
-  private async generateLatestSchema(): Promise<Schemas> {
-    const generator = new SchemaGenerator(this)
-    return generator.generate()
   }
 
   private readExistingSchema(filePath: string): Schemas {

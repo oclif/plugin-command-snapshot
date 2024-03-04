@@ -1,11 +1,12 @@
 import {Flags} from '@oclif/core'
 import chalk from 'chalk'
+import {globbySync} from 'globby'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import {Schema, createGenerator} from 'ts-json-schema-generator'
 
 import SnapshotCommand from '../../snapshot-command.js'
-import {getSchemaFileName} from '../../util.js'
+import {GLOB_PATTERNS, getAllFiles, getSchemaFileName} from '../../util.js'
 
 export type SchemasMap = {
   [key: string]: Schema
@@ -15,31 +16,26 @@ export type Schemas = {commands: SchemasMap; hooks: SchemasMap}
 
 export type GenerateResponse = string[]
 
-export function getAllFiles(dirPath: string, ext: string, allFiles: string[] = []): string[] {
-  let files: string[] = []
-  try {
-    files = fs.readdirSync(dirPath)
-  } catch {}
-
-  for (const file of files) {
-    const fPath = path.join(dirPath, file)
-    if (fs.statSync(fPath).isDirectory()) {
-      allFiles = getAllFiles(fPath, ext, allFiles)
-    } else if (file.endsWith(ext)) {
-      allFiles.push(fPath)
-    }
-  }
-
-  return allFiles
+type SchemaGenerateOptions = {
+  base: SnapshotCommand
+  commandGlobs?: string[]
+  commandsDir?: string
+  ignoreVoid?: boolean
 }
 
 export class SchemaGenerator {
+  private base: SnapshotCommand
   private classToId: Record<string, string> = {}
+  private commandGlobs: string[]
+  private commandsDir: string | undefined
+  private ignoreVoid: boolean
 
-  constructor(
-    private base: SnapshotCommand,
-    private ignoreVoid = true,
-  ) {}
+  constructor(options: SchemaGenerateOptions) {
+    this.base = options.base
+    this.ignoreVoid = options.ignoreVoid ?? true
+    this.commandsDir = options.commandsDir
+    this.commandGlobs = options.commandGlobs ?? GLOB_PATTERNS
+  }
 
   public async generate(): Promise<Schemas> {
     for (const cmd of this.base.commands) {
@@ -101,7 +97,12 @@ export class SchemaGenerator {
   }
 
   private getAllCmdFiles(): string[] {
-    const {rootDir} = this.getDirs()
+    const {outDir, rootDir} = this.getDirs()
+    if (this.commandsDir) {
+      const commandsSrcDir = path.resolve(this.base.config.root, this.commandsDir).replace(outDir, rootDir)
+      return globbySync(this.commandGlobs, {absolute: true, cwd: commandsSrcDir})
+    }
+
     return getAllFiles(path.join(rootDir, 'commands'), '.ts')
   }
 
@@ -216,8 +217,27 @@ export default class SchemaGenerate extends SnapshotCommand {
   }
 
   public async run(): Promise<GenerateResponse> {
+    const strategy =
+      typeof this.config.pjson.oclif?.commands === 'string' ? 'pattern' : this.config.pjson.oclif?.commands?.strategy
+    const commandsDir =
+      typeof this.config.pjson.oclif?.commands === 'string'
+        ? this.config.pjson.oclif?.commands
+        : this.config.pjson.oclif?.commands?.target
+    const commandGlobs =
+      typeof this.config.pjson.oclif?.commands === 'string'
+        ? GLOB_PATTERNS
+        : this.config.pjson.oclif?.commands?.globPatterns
+
+    if (strategy === 'single') {
+      this.error('This command is not supported for single command CLIs')
+    }
+
+    if (strategy === 'explicit') {
+      this.error('This command is not supported for explicit command discovery')
+    }
+
     const {flags} = await this.parse(SchemaGenerate)
-    const generator = new SchemaGenerator(this, flags.ignorevoid)
+    const generator = new SchemaGenerator({base: this, commandGlobs, commandsDir, ignoreVoid: flags.ignorevoid})
 
     const schemas = await generator.generate()
 
