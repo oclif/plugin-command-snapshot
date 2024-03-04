@@ -1,3 +1,9 @@
+# [5.1.0](https://github.com/oclif/plugin-command-snapshot/compare/5.0.10...5.1.0) (2024-03-04)
+
+### Features
+
+- support pattern strategy ([#482](https://github.com/oclif/plugin-command-snapshot/issues/482)) ([687e764](https://github.com/oclif/plugin-command-snapshot/commit/687e764a8dda7a4b984d8eec92910fd41734df57))
+
 ## [5.0.10](https://github.com/oclif/plugin-command-snapshot/compare/5.0.9...5.0.10) (2024-03-03)
 
 ### Bug Fixes
