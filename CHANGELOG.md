@@ -1,3 +1,9 @@
+## [5.1.1](https://github.com/oclif/plugin-command-snapshot/compare/5.1.0...5.1.1) (2024-03-06)
+
+### Bug Fixes
+
+- publish npm-shrinkwrap.json ([39ff428](https://github.com/oclif/plugin-command-snapshot/commit/39ff428814eccdd476444c536df862d3ade7edc5))
+
 # [5.1.0](https://github.com/oclif/plugin-command-snapshot/compare/5.0.10...5.1.0) (2024-03-04)
 
 ### Features
