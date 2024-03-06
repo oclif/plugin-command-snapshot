@@ -3,7 +3,7 @@
     "declaration": true,
     "module": "Node16",
     "outDir": "lib",
-    "rootDir": "src",
+    "rootDirs": ["./src"],
     "strict": true,
     "target": "ES2022",
     "skipLibCheck": true,
