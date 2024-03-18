@@ -11,8 +11,7 @@ Generates and compares OCLIF plugins snapshot files
 
 - [@oclif/plugin-command-snapshot](#oclifplugin-command-snapshot)
 - [Usage](#usage)
-- [generates a snapshot file that has a list or commands and flags in the current CLI or plugin](#generates-a-snapshot-file-that-has-a-list-or-commands-and-flags-in-the-current-cli-or-plugin)
-- [compare the current CLI or plugin commands and flags with a snapshot file to identify changes](#compare-the-current-cli-or-plugin-commands-and-flags-with-a-snapshot-file-to-identify-changes)
+- [Contributing](#contributing)
 <!-- tocstop -->
 
 # Usage
@@ -43,3 +42,7 @@ Use the `snapshot:compare` command in your continuos integration. This command w
 # compare the current CLI or plugin commands and flags with a snapshot file to identify changes
 $ ./bin/run.js snapshot:compare
 ```
+
+# Contributing
+
+See [contributing guide](./CONRTIBUTING.md)
