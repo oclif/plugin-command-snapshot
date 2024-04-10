@@ -6,5 +6,5 @@ oclif.manifest.json
 yarn-error.json
 
 .idea/*
-oclif.lock
+
 npm-shrinkwrap.json
