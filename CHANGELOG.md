@@ -1,3 +1,9 @@
+## [5.1.5](https://github.com/oclif/plugin-command-snapshot/compare/5.1.4...5.1.5) (2024-04-13)
+
+### Bug Fixes
+
+- **deps:** bump ts-json-schema-generator from 1.5.0 to 1.5.1 ([#530](https://github.com/oclif/plugin-command-snapshot/issues/530)) ([2193cf3](https://github.com/oclif/plugin-command-snapshot/commit/2193cf3b962802672ef66b856c5191ab78573004))
+
 ## [5.1.4](https://github.com/oclif/plugin-command-snapshot/compare/5.1.3...5.1.4) (2024-03-25)
 
 ## [5.1.3](https://github.com/oclif/plugin-command-snapshot/compare/5.1.2...5.1.3) (2024-03-24)
