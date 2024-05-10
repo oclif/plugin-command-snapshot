@@ -50,7 +50,6 @@
   "exports": "./lib/index.js",
   "files": [
     "/lib",
-    "/npm-shrinkwrap.json",
     "/oclif.manifest.json",
     "/schemas"
   ],
@@ -79,12 +78,12 @@
   "repository": "oclif/plugin-command-snapshot",
   "scripts": {
     "build": "shx rm -rf lib && tsc",
-    "clean": "shx rm -f oclif.manifest.json npm-shrinkwrap.json",
+    "clean": "shx rm -f oclif.manifest.json",
     "compile": "tsc",
     "lint": "eslint . --ext .ts",
     "postpack": "yarn run clean",
     "posttest": "yarn lint",
-    "prepack": "yarn build && oclif manifest && oclif readme && npm shrinkwrap",
+    "prepack": "yarn build && oclif manifest && oclif readme",
     "prepare": "husky && yarn build",
     "pretest": "yarn build --noEmit && tsc -p test --noEmit",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\" --timeout 20000",
