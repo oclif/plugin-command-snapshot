@@ -1,5 +1,5 @@
 import {Flags, ux} from '@oclif/core'
-import chalk from 'chalk'
+import {red} from 'ansis'
 import {globbySync} from 'globby'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -84,7 +84,7 @@ export class SchemaGenerator {
       if (error instanceof Error) {
         const error_ = error.message.toLowerCase().includes('no root type')
           ? new Error(
-              `Schema generator could not find the ${chalk.red(returnType)} type. Please make sure that ${chalk.red(
+              `Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(
                 returnType,
               )} is exported.`,
             )
