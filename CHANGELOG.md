@@ -1,3 +1,10 @@
+# [5.2.0](https://github.com/oclif/plugin-command-snapshot/compare/5.1.9...5.2.0) (2024-05-31)
+
+### Features
+
+- use @oclif/core v4 ([6287829](https://github.com/oclif/plugin-command-snapshot/commit/628782982e39a081acc595a43af0cc1026bb3c0c))
+- use ansis instead of chalk ([f709b80](https://github.com/oclif/plugin-command-snapshot/commit/f709b805205dc1bd70623d338541bafaaa06f843))
+
 ## [5.1.9](https://github.com/oclif/plugin-command-snapshot/compare/5.1.8...5.1.9) (2024-05-11)
 
 ### Bug Fixes
