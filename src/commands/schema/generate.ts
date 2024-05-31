@@ -1,8 +1,8 @@
-import {Flags} from '@oclif/core'
-import chalk from 'chalk'
+import {Flags, ux} from '@oclif/core'
+import {red} from 'ansis'
 import {globbySync} from 'globby'
-import * as fs from 'node:fs'
-import * as path from 'node:path'
+import fs from 'node:fs'
+import path from 'node:path'
 import {Schema, createGenerator} from 'ts-json-schema-generator'
 
 import SnapshotCommand from '../../snapshot-command.js'
@@ -84,7 +84,7 @@ export class SchemaGenerator {
       if (error instanceof Error) {
         const error_ = error.message.toLowerCase().includes('no root type')
           ? new Error(
-              `Schema generator could not find the ${chalk.red(returnType)} type. Please make sure that ${chalk.red(
+              `Schema generator could not find the ${red(returnType)} type. Please make sure that ${red(
                 returnType,
               )} is exported.`,
             )
@@ -107,11 +107,25 @@ export class SchemaGenerator {
   }
 
   private getAllHookFiles(): string[] {
-    // eslint-disable-next-line unicorn/no-array-reduce
-    const hookFiles = Object.values(this.base.config.pjson.oclif?.hooks ?? {}).reduce(
-      (x: string[], y: string | string[]) => (Array.isArray(y) ? [...x, ...y] : [...x, y]),
-      [],
-    )
+    const hookFiles = Object.values(this.base.config.pjson.oclif?.hooks ?? {})
+      .flatMap((hook) => {
+        if (Array.isArray(hook)) {
+          return hook.map((h) => {
+            if (typeof h === 'string') return h
+            ux.warn(`Identifier/target based hooks are not supported: ${h}`)
+            return null
+          })
+        }
+
+        if (typeof hook === 'string') {
+          return hook
+        }
+
+        ux.warn(`Identifier/target based hooks are not supported: ${hook}`)
+        return null
+      })
+      .filter((h): h is string => typeof h === 'string')
+
     const {outDir, rootDir} = this.getDirs()
     return hookFiles.map((h) => `${path.resolve(h)}.ts`.replace(outDir, rootDir))
   }

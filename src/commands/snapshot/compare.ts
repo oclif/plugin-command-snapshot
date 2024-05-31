@@ -1,7 +1,7 @@
 import {Flags} from '@oclif/core'
-import chalk from 'chalk'
+import {green, red} from 'ansis'
 import difference from 'lodash.difference'
-import * as fs from 'node:fs'
+import fs from 'node:fs'
 import {EOL} from 'node:os'
 
 import SnapshotCommand, {SnapshotEntry} from '../../snapshot-command.js'
@@ -108,16 +108,14 @@ export default class Compare extends SnapshotCommand {
     // Fail the process since there are changes to the snapshot file
     process.exitCode = 1
 
-    this.log(
-      `The following commands and flags have modified: (${chalk.green('+')} added, ${chalk.red('-')} removed)${EOL}`,
-    )
+    this.log(`The following commands and flags have modified: (${green('+')} added, ${red('-')} removed)${EOL}`)
 
     for (const command of removedCommands) {
-      this.log(chalk.red(`\t-${command}`))
+      this.log(red(`\t-${command}`))
     }
 
     for (const command of addedCommands) {
-      this.log(chalk.green(`\t+${command}`))
+      this.log(green(`\t+${command}`))
     }
 
     const removedProperties: string[] = []
@@ -126,7 +124,7 @@ export default class Compare extends SnapshotCommand {
       if (properties.some((prop) => prop.added || prop.removed)) this.log(`\t  ${propertyName}:`)
       for (const prop of properties) {
         if (prop.added || prop.removed) {
-          const color = prop.added ? chalk.green : chalk.red
+          const color = prop.added ? green : red
           this.log(color(`\t\t${prop.added ? '+' : '-'}${prop.name}`))
         }
 
@@ -147,7 +145,7 @@ export default class Compare extends SnapshotCommand {
 
     // Check if existent commands, or properties (flags, aliases) have been deleted
     if (removedCommands.length > 0 || removedProperties.length > 0) {
-      this.log(chalk.red(`${EOL}Since there are deletions, a major version bump is required.`))
+      this.log(red(`${EOL}Since there are deletions, a major version bump is required.`))
     }
 
     return {addedCommands, diffCommands, removedCommands, removedFlags: removedCommands}

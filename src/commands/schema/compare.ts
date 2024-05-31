@@ -1,9 +1,9 @@
 import {Flags, toConfiguredId} from '@oclif/core'
-import chalk from 'chalk'
+import {bold, cyan, underline} from 'ansis'
 import {Operation, diff} from 'just-diff'
 import get from 'lodash.get'
-import * as fs from 'node:fs'
-import * as path from 'node:path'
+import fs from 'node:fs'
+import path from 'node:path'
 import * as semver from 'semver'
 import {Schema} from 'ts-json-schema-generator'
 
@@ -88,7 +88,7 @@ export default class SchemaCompare extends SnapshotCommand {
       switch (change.op) {
         case 'replace': {
           humanReadableChanges[commandId].push(
-            `${chalk.underline(readablePath)} was changed from ${chalk.cyan(existing)} to ${chalk.cyan(latest)}`,
+            `${underline(readablePath)} was changed from ${cyan(existing)} to ${cyan(latest)}`,
           )
           break
         }
@@ -96,8 +96,8 @@ export default class SchemaCompare extends SnapshotCommand {
         case 'add': {
           humanReadableChanges[commandId].push(
             lastElementIsNum
-              ? `Array item at ${chalk.underline(basePath)} was ${chalk.cyan('added')} to latest schema`
-              : `${chalk.underline(readablePath)} was ${chalk.cyan('added')} to latest schema`,
+              ? `Array item at ${underline(basePath)} was ${cyan('added')} to latest schema`
+              : `${underline(readablePath)} was ${cyan('added')} to latest schema`,
           )
           break
         }
@@ -105,8 +105,8 @@ export default class SchemaCompare extends SnapshotCommand {
         case 'remove': {
           humanReadableChanges[commandId].push(
             lastElementIsNum
-              ? `Array item at ${chalk.underline(basePath)} was ${chalk.cyan('not found')} in latest schema`
-              : `${chalk.underline(readablePath)} was ${chalk.cyan('not found')} in latest schema`,
+              ? `Array item at ${underline(basePath)} was ${cyan('not found')} in latest schema`
+              : `${underline(readablePath)} was ${cyan('not found')} in latest schema`,
           )
           break
         }
@@ -123,10 +123,10 @@ export default class SchemaCompare extends SnapshotCommand {
     }
 
     this.log()
-    this.log(chalk.bold.red('Found the following schema changes:'))
+    this.log(bold.red('Found the following schema changes:'))
     for (const [commandId, changes] of Object.entries(humanReadableChanges)) {
       this.log()
-      this.log(chalk.bold(commandId))
+      this.log(bold(commandId))
       for (const change of changes) {
         this.log(`  - ${change}`)
       }
@@ -136,7 +136,7 @@ export default class SchemaCompare extends SnapshotCommand {
     const bin = process.platform === 'win32' ? 'bin\\dev.cmd' : 'bin/dev.js'
     this.log(
       'If intended, please update the schema file(s) and run again:',
-      chalk.bold(`${bin} ${toConfiguredId('schema:generate', this.config)}`),
+      bold(`${bin} ${toConfiguredId('schema:generate', this.config)}`),
     )
     process.exitCode = 1
     return changes
