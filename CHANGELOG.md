@@ -1,3 +1,9 @@
+## [5.2.1](https://github.com/oclif/plugin-command-snapshot/compare/5.2.0...5.2.1) (2024-06-04)
+
+### Bug Fixes
+
+- core v4 ([9a7cd1e](https://github.com/oclif/plugin-command-snapshot/commit/9a7cd1ed5b2817900cec35a264fe80eea7709ccb))
+
 # [5.2.0](https://github.com/oclif/plugin-command-snapshot/compare/5.1.9...5.2.0) (2024-05-31)
 
 ### Features
