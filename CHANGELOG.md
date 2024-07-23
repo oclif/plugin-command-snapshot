@@ -1,3 +1,9 @@
+## [5.2.9](https://github.com/oclif/plugin-command-snapshot/compare/5.2.8...5.2.9) (2024-07-23)
+
+### Bug Fixes
+
+- husky 9.1.1 fix ([#603](https://github.com/oclif/plugin-command-snapshot/issues/603)) ([bd2fb91](https://github.com/oclif/plugin-command-snapshot/commit/bd2fb912a97890ce1de6ce2b6450ea775959dc0e))
+
 ## [5.2.8](https://github.com/oclif/plugin-command-snapshot/compare/5.2.7...5.2.8) (2024-07-21)
 
 ### Bug Fixes
