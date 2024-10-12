@@ -2412,10 +2412,10 @@
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.170.tgz#0d67711d4bf7f4ca5147e9091b847479b87925d6"
   integrity sha512-bpcvu/MKHHeYX+qeEN8GE7DIravODWdACVA1ctevD8CN24RhPZIKMn9ntfAsrvLfSX3cR5RrBKAbYm9bGs0A+Q==
 
-"@types/mocha@^10.0.8":
-  version "10.0.8"
-  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-10.0.8.tgz#a7eff5816e070c3b4d803f1d3cd780c4e42934a1"
-  integrity sha512-HfMcUmy9hTMJh66VNcmeC9iVErIZJli2bszuXc6julh5YGuRb/W5OnkHjwLNYdFlMis0sY3If5SEAp+PktdJjw==
+"@types/mocha@^10.0.9":
+  version "10.0.9"
+  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-10.0.9.tgz#101e9da88d2c02e5ac8952982c23b224524d662a"
+  integrity sha512-sicdRoWtYevwxjOHNMPTl3vSfJM6oyW8o1wXeI7uww6b6xHg8eBznQDNSGBCDJmsE8UMxP05JgZRtsKbTqt//Q==
 
 "@types/mute-stream@^0.0.4":
   version "0.0.4"
