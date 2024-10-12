@@ -24,7 +24,7 @@
     "@types/lodash.difference": "^4.5.9",
     "@types/lodash.get": "^4.4.9",
     "@types/lodash.sortby": "^4.7.9",
-    "@types/mocha": "^10.0.8",
+    "@types/mocha": "^10.0.9",
     "@types/node": "^18",
     "@types/semver": "^7.5.8",
     "@types/sinon": "^17.0.3",
