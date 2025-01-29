@@ -1,6 +1,6 @@
 import {Flags, toConfiguredId} from '@oclif/core'
 import {bold, cyan, underline} from 'ansis'
-import {Operation, diff} from 'just-diff'
+import {diff, Operation} from 'just-diff'
 import get from 'lodash.get'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -8,7 +8,7 @@ import * as semver from 'semver'
 import {Schema} from 'ts-json-schema-generator'
 
 import SnapshotCommand from '../../snapshot-command.js'
-import {GLOB_PATTERNS, getAllFiles, getKeyNameFromFilename} from '../../util.js'
+import {getAllFiles, getKeyNameFromFilename, GLOB_PATTERNS} from '../../util.js'
 import {SchemaGenerator, Schemas} from './generate.js'
 
 export type SchemaComparison = Array<{op: Operation; path: (number | string)[]; value: unknown}>
@@ -31,6 +31,7 @@ export default class SchemaCompare extends SnapshotCommand {
     }),
   }
 
+  // eslint-disable-next-line complexity
   public async run(): Promise<SchemaComparison> {
     const strategy =
       typeof this.config.pjson.oclif?.commands === 'string' ? 'pattern' : this.config.pjson.oclif?.commands?.strategy
@@ -86,13 +87,6 @@ export default class SchemaCompare extends SnapshotCommand {
       const basePath = lastElementIsNum ? readablePath.replace(`.${lastPathElement}`, '') : readablePath
 
       switch (change.op) {
-        case 'replace': {
-          humanReadableChanges[commandId].push(
-            `${underline(readablePath)} was changed from ${cyan(existing)} to ${cyan(latest)}`,
-          )
-          break
-        }
-
         case 'add': {
           humanReadableChanges[commandId].push(
             lastElementIsNum
@@ -107,6 +101,13 @@ export default class SchemaCompare extends SnapshotCommand {
             lastElementIsNum
               ? `Array item at ${underline(basePath)} was ${cyan('not found')} in latest schema`
               : `${underline(readablePath)} was ${cyan('not found')} in latest schema`,
+          )
+          break
+        }
+
+        case 'replace': {
+          humanReadableChanges[commandId].push(
+            `${underline(readablePath)} was changed from ${cyan(existing)} to ${cyan(latest)}`,
           )
           break
         }
@@ -133,7 +134,7 @@ export default class SchemaCompare extends SnapshotCommand {
     }
 
     this.log()
-    const bin = process.platform === 'win32' ? 'bin\\dev.cmd' : 'bin/dev.js'
+    const bin = process.platform === 'win32' ? String.raw`bin\dev.cmd` : 'bin/dev.js'
     this.log(
       'If intended, please update the schema file(s) and run again:',
       bold(`${bin} ${toConfiguredId('schema:generate', this.config)}`),

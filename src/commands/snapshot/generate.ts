@@ -33,7 +33,7 @@ export default class Generate extends SnapshotCommand {
     const charConflictCommand = resultCommands.find(
       (command) =>
         command.flags.length > 1 &&
-        new Set([...command.flags, ...command.flagChars, ...command.flagAliases]).size !==
+        new Set([...command.flagAliases, ...command.flagChars, ...command.flags]).size !==
           [...command.flags, ...command.flagChars, ...command.flagAliases].length,
     )
 
