@@ -3,10 +3,10 @@ import {red} from 'ansis'
 import {globbySync} from 'globby'
 import fs from 'node:fs'
 import path from 'node:path'
-import {Schema, createGenerator} from 'ts-json-schema-generator'
+import {createGenerator, Schema} from 'ts-json-schema-generator'
 
 import SnapshotCommand from '../../snapshot-command.js'
-import {GLOB_PATTERNS, getAllFiles, getSchemaFileName} from '../../util.js'
+import {getAllFiles, getSchemaFileName, GLOB_PATTERNS} from '../../util.js'
 
 export type SchemasMap = {
   [key: string]: Schema

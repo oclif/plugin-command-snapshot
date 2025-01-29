@@ -12,12 +12,12 @@ interface Change {
   removed?: boolean
 }
 
-type CommandChange = {
+type CommandChange = Change & {
   alias: Change[]
   chars: Change[]
   flags: Change[]
   plugin: string
-} & Change
+}
 
 export type CompareResponse = {
   addedCommands?: string[]
@@ -153,7 +153,7 @@ export default class Compare extends SnapshotCommand {
 
   /**
    * compares two command's properties to each other
-   * @return a list of added, removed, updated, and changed properties
+   * @returns a list of added, removed, updated, and changed properties
    * @param initial initial command property to compare against
    * @param updated generated command property to compare with
    */
