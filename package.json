@@ -35,7 +35,7 @@
     "eslint-config-oclif": "^6.0.0",
     "eslint-config-prettier": "^10.0.1",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.2",
+    "lint-staged": "^15.4.3",
     "mocha": "^10.8.2",
     "nyc": "^15",
     "oclif": "^4.17.17",
