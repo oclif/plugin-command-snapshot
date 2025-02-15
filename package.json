@@ -7,7 +7,7 @@
   "dependencies": {
     "@oclif/core": "^4",
     "ansis": "^3.10.0",
-    "globby": "^14.0.2",
+    "globby": "^14.1.0",
     "just-diff": "^5.2.0",
     "lodash.difference": "^4.5.0",
     "lodash.get": "^4.4.2",
