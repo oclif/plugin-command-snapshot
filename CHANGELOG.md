@@ -1,3 +1,9 @@
+## [5.2.34](https://github.com/oclif/plugin-command-snapshot/compare/5.2.33...5.2.34) (2025-02-15)
+
+### Bug Fixes
+
+- **deps:** bump globby from 14.0.2 to 14.1.0 ([#745](https://github.com/oclif/plugin-command-snapshot/issues/745)) ([ad4114e](https://github.com/oclif/plugin-command-snapshot/commit/ad4114e911b1580250c7b94192335bed73c4d054))
+
 ## [5.2.33](https://github.com/oclif/plugin-command-snapshot/compare/5.2.32...5.2.33) (2025-02-09)
 
 ### Bug Fixes
