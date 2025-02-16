@@ -1,3 +1,9 @@
+## [5.2.35](https://github.com/oclif/plugin-command-snapshot/compare/5.2.34...5.2.35) (2025-02-16)
+
+### Bug Fixes
+
+- **deps:** bump ansis from 3.10.0 to 3.14.0 ([#742](https://github.com/oclif/plugin-command-snapshot/issues/742)) ([ce6678e](https://github.com/oclif/plugin-command-snapshot/commit/ce6678e18bbb0d45483c1fd0c589dcbadfb9de1d))
+
 ## [5.2.34](https://github.com/oclif/plugin-command-snapshot/compare/5.2.33...5.2.34) (2025-02-15)
 
 ### Bug Fixes
