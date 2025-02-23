@@ -6,7 +6,7 @@
   "bugs": "https://github.com/oclif/plugin-command-snapshot/issues",
   "dependencies": {
     "@oclif/core": "^4",
-    "ansis": "^3.14.0",
+    "ansis": "^3.16.0",
     "globby": "^14.1.0",
     "just-diff": "^5.2.0",
     "lodash.difference": "^4.5.0",
