@@ -1,3 +1,9 @@
+## [5.2.40](https://github.com/oclif/plugin-command-snapshot/compare/5.2.39...5.2.40) (2025-05-18)
+
+### Bug Fixes
+
+- **deps:** bump semver from 7.7.1 to 7.7.2 ([#803](https://github.com/oclif/plugin-command-snapshot/issues/803)) ([ba02c42](https://github.com/oclif/plugin-command-snapshot/commit/ba02c42fc46e89e635f29125078226baa2aa29f2))
+
 ## [5.2.39](https://github.com/oclif/plugin-command-snapshot/compare/5.2.38...5.2.39) (2025-05-04)
 
 ### Bug Fixes
