@@ -1,3 +1,9 @@
+# [5.3.0](https://github.com/oclif/plugin-command-snapshot/compare/5.2.40...5.3.0) (2025-06-04)
+
+### Features
+
+- expose a bin script ([70eef57](https://github.com/oclif/plugin-command-snapshot/commit/70eef57bd44faaa193dc0342f1c33aa455c9e6f8))
+
 ## [5.2.40](https://github.com/oclif/plugin-command-snapshot/compare/5.2.39...5.2.40) (2025-05-18)
 
 ### Bug Fixes
