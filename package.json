@@ -4,6 +4,9 @@
   "version": "5.2.40",
   "author": "Salesforce",
   "bugs": "https://github.com/oclif/plugin-command-snapshot/issues",
+  "bin": {
+    "oclif-snapshot": "bin/run.js"
+  },
   "dependencies": {
     "@oclif/core": "^4",
     "ansis": "^3.17.0",
@@ -50,6 +53,7 @@
   },
   "exports": "./lib/index.js",
   "files": [
+    "bin/run.js",
     "/lib",
     "/oclif.manifest.json",
     "/schemas"
@@ -61,7 +65,7 @@
   "license": "MIT",
   "oclif": {
     "commands": "./lib/commands",
-    "bin": "oclif-example",
+    "bin": "oclif-snapshot",
     "topics": {
       "snapshot": {
         "description": "generates and compares OCLIF plugins snapshot files"
