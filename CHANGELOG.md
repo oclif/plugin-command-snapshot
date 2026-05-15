@@ -1,3 +1,9 @@
+## [5.3.20](https://github.com/oclif/plugin-command-snapshot/compare/5.3.19...5.3.20) (2026-05-15)
+
+### Bug Fixes
+
+- **deps:** bump fast-xml-builder from 1.0.0 to 1.2.0 ([#985](https://github.com/oclif/plugin-command-snapshot/issues/985)) ([ad38dd6](https://github.com/oclif/plugin-command-snapshot/commit/ad38dd6097439e337ee065ba6d9ff0a020b43179))
+
 ## [5.3.19](https://github.com/oclif/plugin-command-snapshot/compare/5.3.18...5.3.19) (2026-05-10)
 
 ### Bug Fixes
