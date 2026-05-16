@@ -1,3 +1,9 @@
+## [5.3.21](https://github.com/oclif/plugin-command-snapshot/compare/5.3.20...5.3.21) (2026-05-16)
+
+### Bug Fixes
+
+- **deps:** bump flatted from 3.3.2 to 3.4.2 ([#990](https://github.com/oclif/plugin-command-snapshot/issues/990)) ([ac5b5ae](https://github.com/oclif/plugin-command-snapshot/commit/ac5b5ae74639abd43144c7ad005d29fb15682660))
+
 ## [5.3.20](https://github.com/oclif/plugin-command-snapshot/compare/5.3.19...5.3.20) (2026-05-15)
 
 ### Bug Fixes
