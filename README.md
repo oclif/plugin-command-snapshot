@@ -14,6 +14,7 @@ Generates and compares OCLIF plugins snapshot files
 - [generates a snapshot file that has a list or commands and flags in the current CLI or plugin](#generates-a-snapshot-file-that-has-a-list-or-commands-and-flags-in-the-current-cli-or-plugin)
 - [compare the current CLI or plugin commands and flags with a snapshot file to identify changes](#compare-the-current-cli-or-plugin-commands-and-flags-with-a-snapshot-file-to-identify-changes)
 - [Contributing](#contributing)
+
 <!-- tocstop -->
 
 # Usage
