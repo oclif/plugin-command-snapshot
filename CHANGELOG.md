@@ -1,3 +1,5 @@
+## [5.3.31](https://github.com/oclif/plugin-command-snapshot/compare/5.3.30...5.3.31) (2026-07-16)
+
 ## [5.3.30](https://github.com/oclif/plugin-command-snapshot/compare/5.3.29...5.3.30) (2026-07-04)
 
 ### Bug Fixes
