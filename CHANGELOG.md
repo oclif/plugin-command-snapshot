@@ -1,3 +1,9 @@
+## [5.3.32](https://github.com/oclif/plugin-command-snapshot/compare/5.3.31...5.3.32) (2026-07-25)
+
+### Bug Fixes
+
+- **deps:** bump braces from 3.0.2 to 3.0.3 ([#1031](https://github.com/oclif/plugin-command-snapshot/issues/1031)) ([a7e7075](https://github.com/oclif/plugin-command-snapshot/commit/a7e707564ffc405cb5a2a7cb0c8bbcda039b8431))
+
 ## [5.3.31](https://github.com/oclif/plugin-command-snapshot/compare/5.3.30...5.3.31) (2026-07-16)
 
 ## [5.3.30](https://github.com/oclif/plugin-command-snapshot/compare/5.3.29...5.3.30) (2026-07-04)
