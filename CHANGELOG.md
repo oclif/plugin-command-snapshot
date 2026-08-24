@@ -1,3 +1,9 @@
+# [5.4.0](https://github.com/oclif/plugin-command-snapshot/compare/5.3.35...5.4.0) (2026-08-24)
+
+### Features
+
+- bumping eslint to v10 (W-23473845) ([034d356](https://github.com/oclif/plugin-command-snapshot/commit/034d356bd3ea926d5c18cc2c54163542f0550bce))
+
 ## [5.3.35](https://github.com/oclif/plugin-command-snapshot/compare/5.3.34...5.3.35) (2026-08-08)
 
 ### Bug Fixes
