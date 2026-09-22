@@ -83,13 +83,13 @@ export default class SchemaCompare extends SnapshotCommand {
         humanReadableChanges[commandId] = []
       }
 
-      const isLastElementIsNum = isNumber(lastPathElement)
-      const basePath = isLastElementIsNum ? readablePath.replace(`.${lastPathElement}`, '') : readablePath
+      const isLastElementNum = isNumber(lastPathElement)
+      const basePath = isLastElementNum ? readablePath.replace(`.${lastPathElement}`, '') : readablePath
 
       switch (change.op) {
         case 'add': {
           humanReadableChanges[commandId].push(
-            isLastElementIsNum
+            isLastElementNum
               ? `Array item at ${underline(basePath)} was ${cyan('added')} to latest schema`
               : `${underline(readablePath)} was ${cyan('added')} to latest schema`,
           )
@@ -98,7 +98,7 @@ export default class SchemaCompare extends SnapshotCommand {
 
         case 'remove': {
           humanReadableChanges[commandId].push(
-            isLastElementIsNum
+            isLastElementNum
               ? `Array item at ${underline(basePath)} was ${cyan('not found')} in latest schema`
               : `${underline(readablePath)} was ${cyan('not found')} in latest schema`,
           )
@@ -145,8 +145,8 @@ export default class SchemaCompare extends SnapshotCommand {
 
   private readExistingSchema(filePath: string): Schemas {
     const contents = fs.readdirSync(filePath)
-    const isFolderIsVersioned = contents.every((c) => semver.valid(c))
-    const schemasDir = isFolderIsVersioned ? path.join(filePath, semver.rsort(contents)[0] || '') : filePath
+    const isFolderVersioned = contents.every((c) => semver.valid(c))
+    const schemasDir = isFolderVersioned ? path.join(filePath, semver.rsort(contents)[0] || '') : filePath
     const schemaFiles = getAllFiles(schemasDir, '.json')
 
     let schemas: Schemas = {
