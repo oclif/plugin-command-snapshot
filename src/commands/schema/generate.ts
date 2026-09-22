@@ -3,14 +3,12 @@ import {red} from 'ansis'
 import {globbySync} from 'globby'
 import fs from 'node:fs'
 import path from 'node:path'
-import {createGenerator, Schema} from 'ts-json-schema-generator'
+import {createGenerator, type Schema} from 'ts-json-schema-generator'
 
 import SnapshotCommand from '../../snapshot-command.js'
 import {getAllFiles, getSchemaFileName, GLOB_PATTERNS} from '../../util.js'
 
-export type SchemasMap = {
-  [key: string]: Schema
-}
+export type SchemasMap = Record<string, Schema>
 
 export type Schemas = {commands: SchemasMap; hooks: SchemasMap}
 
@@ -24,11 +22,11 @@ type SchemaGenerateOptions = {
 }
 
 export class SchemaGenerator {
-  private base: SnapshotCommand
+  private readonly base: SnapshotCommand
   private classToId: Record<string, string> = {}
-  private commandGlobs: string[]
-  private commandsDir: string | undefined
-  private ignoreVoid: boolean
+  private readonly commandGlobs: string[]
+  private readonly commandsDir: string | undefined
+  private readonly ignoreVoid: boolean
 
   constructor(options: SchemaGenerateOptions) {
     this.base = options.base
@@ -179,23 +177,23 @@ export class SchemaGenerator {
    * @param file the file to parse
    * @returns Returns the name of the return type and the hook id.
    */
-  private parseHookFile(file: string): {hookId: null | string; returnType: null | string} {
+  private parseHookFile(file: string): {hookId: string | undefined; returnType: string | undefined} {
     const returnTypeRegex = /(?<=const\shook:\s(.*?)<)[^'](.*?)[^'](>*)(?=>)/g
     const contents = fs.readFileSync(file, 'utf8')
     const [returnType] = (returnTypeRegex.exec(contents) as string[]) || []
     if (!returnType || returnType === 'void') {
-      return {hookId: null, returnType: null}
+      return {hookId: undefined, returnType: undefined}
     }
 
     const hooks = this.base.config.pjson.oclif?.hooks ?? {}
     const hookId = Object.keys(hooks).find((key) => {
       const hookFiles = (Array.isArray(hooks[key]) ? hooks[key] : [hooks[key]]) as string[]
-      const hookFileNames = hookFiles.map((f) => path.basename(f).split('.')[0])
-      const currentFileName = path.basename(file).split('.')[0]
+      const hookFileNames = hookFiles.map((f) => path.basename(f).split('.', 1)[0])
+      const currentFileName = path.basename(file).split('.', 1)[0]
       return hookFileNames.includes(currentFileName)
     })
     if (!hookId) {
-      return {hookId: null, returnType: null}
+      return {hookId: undefined, returnType: undefined}
     }
 
     this.validateReturnType(returnType, hookId)
@@ -204,10 +202,13 @@ export class SchemaGenerator {
 
   private validateReturnType(returnType: string, commandId: string) {
     const notAllowed = this.ignoreVoid ? ['any', 'unknown'] : ['any', 'unknown', 'void']
-    const vagueTypes = ['JsonMap', 'JsonCollection', 'AnyJson']
     if (notAllowed.includes(returnType)) {
       throw new Error(`${returnType} (from ${commandId}) is not allowed. Please use a more specific type.`)
-    } else if (vagueTypes.includes(returnType)) {
+    }
+
+    const vagueTypes = ['JsonMap', 'JsonCollection', 'AnyJson']
+
+    if (vagueTypes.includes(returnType)) {
       throw new Error(`${returnType} (from ${commandId}) is too vague. Please use a more specific type.`)
     }
   }
