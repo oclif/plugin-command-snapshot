@@ -5,12 +5,6 @@
     }
   },
   "src/commands/schema/compare.ts": {
-    "@typescript-eslint/array-type": {
-      "count": 1
-    },
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 3
-    },
     "@typescript-eslint/no-shadow": {
       "count": 1
     },
@@ -19,9 +13,6 @@
     },
     "@typescript-eslint/switch-exhaustiveness-check": {
       "count": 1
-    },
-    "unicorn/consistent-boolean-name": {
-      "count": 2
     },
     "unicorn/consistent-class-member-order": {
       "count": 1
@@ -40,22 +31,10 @@
     },
     "unicorn/prefer-number-is-safe-integer": {
       "count": 1
-    },
-    "unicorn/prefer-split-limit": {
-      "count": 1
     }
   },
   "src/commands/schema/generate.ts": {
-    "@typescript-eslint/consistent-indexed-object-style": {
-      "count": 1
-    },
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/no-base-to-string": {
-      "count": 2
-    },
-    "@typescript-eslint/no-restricted-types": {
       "count": 2
     },
     "@typescript-eslint/no-unsafe-argument": {
@@ -65,9 +44,6 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "@typescript-eslint/prefer-readonly": {
       "count": 4
     },
     "@typescript-eslint/restrict-template-expressions": {
@@ -82,43 +58,19 @@
     "unicorn/no-unsafe-string-replacement": {
       "count": 3
     },
-    "unicorn/no-useless-else": {
-      "count": 1
-    },
     "unicorn/prefer-else-if": {
       "count": 1
     },
     "unicorn/prefer-simple-condition-first": {
       "count": 1
-    },
-    "unicorn/prefer-split-limit": {
-      "count": 2
     }
   },
   "src/commands/snapshot/compare.ts": {
-    "@typescript-eslint/consistent-type-definitions": {
-      "count": 1
-    },
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
     "@typescript-eslint/prefer-nullish-coalescing": {
       "count": 3
-    },
-    "unicorn/consistent-boolean-name": {
-      "count": 4
-    },
-    "unicorn/prefer-continue": {
-      "count": 1
     }
   },
   "src/commands/snapshot/generate.ts": {
-    "@typescript-eslint/consistent-type-imports": {
-      "count": 1
-    },
     "@typescript-eslint/restrict-template-expressions": {
       "count": 2
     },

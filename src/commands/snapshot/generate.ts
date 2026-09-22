@@ -1,6 +1,6 @@
 import {Flags} from '@oclif/core'
 
-import SnapshotCommand, {SnapshotEntry} from '../../snapshot-command.js'
+import SnapshotCommand, {type SnapshotEntry} from '../../snapshot-command.js'
 
 export type Snapshots = SnapshotEntry[]
 

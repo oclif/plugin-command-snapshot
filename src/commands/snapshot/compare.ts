@@ -4,9 +4,9 @@ import difference from 'lodash.difference'
 import fs from 'node:fs'
 import {EOL} from 'node:os'
 
-import SnapshotCommand, {SnapshotEntry} from '../../snapshot-command.js'
+import SnapshotCommand, {type SnapshotEntry} from '../../snapshot-command.js'
 
-interface Change {
+type Change = {
   added?: boolean
   name: string
   removed?: boolean
@@ -41,7 +41,7 @@ export default class Compare extends SnapshotCommand {
       chars: Object.values(command.flags)
         .map((flag) => flag.char)
         .filter((char) => typeof char === 'string')
-        .map((char) => ({name: char as string})),
+        .map((char) => ({name: char})),
       flags: Object.entries(command.flags).map((flagName) => ({name: flagName[0]})),
       name: command.id,
       plugin: command.pluginName || '',
@@ -64,31 +64,31 @@ export default class Compare extends SnapshotCommand {
     for (const initialCommand of initialCommands) {
       const updatedCommand = updatedCommands.find((updatedCommand) => {
         // Protect against old snapshot files that don't have the plugin entry filled out.
-        const samePlugin = initialCommand.plugin ? initialCommand.plugin === updatedCommand.plugin : true
-        return initialCommand.command === updatedCommand.name && samePlugin
+        const isSamePlugin = initialCommand.plugin ? initialCommand.plugin === updatedCommand.plugin : true
+        return initialCommand.command === updatedCommand.name && isSamePlugin
       })
 
       if (updatedCommand) {
         const changedFlags = this.diffCommandProperty(initialCommand.flags, updatedCommand.flags).changedProperty
         const changedAlias = this.diffCommandProperty(initialCommand.alias, updatedCommand.alias).changedProperty
         const changedChars = this.diffCommandProperty(initialCommand.flagChars, updatedCommand.chars).changedProperty
-        const flagsChanged = changedFlags.length > 0
-        const aliasChanged = changedAlias.length > 0
-        const charsChanged = changedChars.length > 0
+        const isFlagsChanged = changedFlags.length > 0
+        const isAliasChanged = changedAlias.length > 0
+        const isCharsChanged = changedChars.length > 0
 
-        if (aliasChanged) {
+        if (isAliasChanged) {
           updatedCommand.alias = changedAlias
         }
 
-        if (charsChanged) {
+        if (isCharsChanged) {
           updatedCommand.chars = changedChars
         }
 
-        if (flagsChanged) {
+        if (isFlagsChanged) {
           updatedCommand.flags = changedFlags
         }
 
-        if (flagsChanged || aliasChanged || charsChanged) {
+        if (isFlagsChanged || isAliasChanged || isCharsChanged) {
           diffCommands.push(updatedCommand)
         }
       } else {
@@ -167,10 +167,12 @@ export default class Compare extends SnapshotCommand {
     const changedProperty: Change[] = []
 
     for (const update of updated) {
-      if (addedProperty.includes(update.name)) {
-        update.added = true
-        changedProperty.push(update)
+      if (!addedProperty.includes(update.name)) {
+        continue
       }
+
+      update.added = true
+      changedProperty.push(update)
     }
 
     for (const remove of removedProperty) {

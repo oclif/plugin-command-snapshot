@@ -1,17 +1,17 @@
 import {Flags, toConfiguredId} from '@oclif/core'
 import {bold, cyan, underline} from 'ansis'
-import {diff, Operation} from 'just-diff'
+import {diff, type Operation} from 'just-diff'
 import get from 'lodash.get'
 import fs from 'node:fs'
 import path from 'node:path'
 import * as semver from 'semver'
-import {Schema} from 'ts-json-schema-generator'
+import {type Schema} from 'ts-json-schema-generator'
 
 import SnapshotCommand from '../../snapshot-command.js'
 import {getAllFiles, getKeyNameFromFilename, GLOB_PATTERNS} from '../../util.js'
-import {SchemaGenerator, Schemas} from './generate.js'
+import {SchemaGenerator, type Schemas} from './generate.js'
 
-export type SchemaComparison = Array<{op: Operation; path: (number | string)[]; value: unknown}>
+export type SchemaComparison = Array<{op: Operation; path: Array<number | string>; value: unknown}>
 
 function isNumber(n: number | string | undefined): boolean {
   return Number.isInteger(Number(n))
@@ -76,20 +76,20 @@ export default class SchemaCompare extends SnapshotCommand {
       const objPath = change.path.join('.')
       const existing = get(existingSchema, objPath)
       const latest = get(latestSchema, objPath)
-      const [commandId] = objPath.split('.definitions')
+      const [commandId] = objPath.split('.definitions', 1)
       const readablePath = objPath.replace(`${commandId}.`, '')
 
       if (!humanReadableChanges[commandId]) {
         humanReadableChanges[commandId] = []
       }
 
-      const lastElementIsNum = isNumber(lastPathElement)
-      const basePath = lastElementIsNum ? readablePath.replace(`.${lastPathElement}`, '') : readablePath
+      const isLastElementNum = isNumber(lastPathElement)
+      const basePath = isLastElementNum ? readablePath.replace(`.${lastPathElement}`, '') : readablePath
 
       switch (change.op) {
         case 'add': {
           humanReadableChanges[commandId].push(
-            lastElementIsNum
+            isLastElementNum
               ? `Array item at ${underline(basePath)} was ${cyan('added')} to latest schema`
               : `${underline(readablePath)} was ${cyan('added')} to latest schema`,
           )
@@ -98,7 +98,7 @@ export default class SchemaCompare extends SnapshotCommand {
 
         case 'remove': {
           humanReadableChanges[commandId].push(
-            lastElementIsNum
+            isLastElementNum
               ? `Array item at ${underline(basePath)} was ${cyan('not found')} in latest schema`
               : `${underline(readablePath)} was ${cyan('not found')} in latest schema`,
           )
@@ -145,8 +145,8 @@ export default class SchemaCompare extends SnapshotCommand {
 
   private readExistingSchema(filePath: string): Schemas {
     const contents = fs.readdirSync(filePath)
-    const folderIsVersioned = contents.every((c) => semver.valid(c))
-    const schemasDir = folderIsVersioned ? path.join(filePath, semver.rsort(contents)[0] || '') : filePath
+    const isFolderVersioned = contents.every((c) => semver.valid(c))
+    const schemasDir = isFolderVersioned ? path.join(filePath, semver.rsort(contents)[0] || '') : filePath
     const schemaFiles = getAllFiles(schemasDir, '.json')
 
     let schemas: Schemas = {
