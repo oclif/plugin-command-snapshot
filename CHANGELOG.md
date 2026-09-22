@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/oclif/plugin-command-snapshot/compare/6.0.0...6.0.1) (2026-09-22)
+
+### Bug Fixes
+
+- feedback from code review (W-24099831) ([0724b5f](https://github.com/oclif/plugin-command-snapshot/commit/0724b5f49e1ab02692ae956c2f580e8d4d0ee922))
+- resolved autofixable eslint violations (W-24099831) ([7c30ea4](https://github.com/oclif/plugin-command-snapshot/commit/7c30ea4a21a3e8656431790fcd6aa2e390ec5ade))
+
 # [6.0.0](https://github.com/oclif/plugin-command-snapshot/compare/5.4.0...6.0.0) (2026-08-31)
 
 - feat!: upgrade oclif/core to v5 @W-23512455@ ([f1f9fea](https://github.com/oclif/plugin-command-snapshot/commit/f1f9feabcb3357144f009c690b27e43040331315))
