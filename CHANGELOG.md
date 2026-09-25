@@ -1,3 +1,9 @@
+## [6.0.2](https://github.com/oclif/plugin-command-snapshot/compare/6.0.1...6.0.2) (2026-09-25)
+
+### Bug Fixes
+
+- **deps:** bump browserslist from 4.28.2 to 4.28.9 ([29faa50](https://github.com/oclif/plugin-command-snapshot/commit/29faa50a3c467ee6d100a439db2308e8acf8c49d))
+
 ## [6.0.1](https://github.com/oclif/plugin-command-snapshot/compare/6.0.0...6.0.1) (2026-09-22)
 
 ### Bug Fixes
