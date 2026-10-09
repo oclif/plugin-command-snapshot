@@ -1,3 +1,9 @@
+## [6.0.3](https://github.com/oclif/plugin-command-snapshot/compare/6.0.2...6.0.3) (2026-10-09)
+
+### Bug Fixes
+
+- **deps:** bump @humanfs/node from 0.16.6 to 0.16.8 ([#1052](https://github.com/oclif/plugin-command-snapshot/issues/1052)) ([41fe236](https://github.com/oclif/plugin-command-snapshot/commit/41fe23642eb2bc658ea95aa1276cdcf8b16de157))
+
 ## [6.0.2](https://github.com/oclif/plugin-command-snapshot/compare/6.0.1...6.0.2) (2026-09-25)
 
 ### Bug Fixes
