@@ -1,3 +1,9 @@
+## [6.0.11](https://github.com/oclif/plugin-command-snapshot/compare/6.0.10...6.0.11) (2026-11-08)
+
+### Bug Fixes
+
+- **deps:** bump picomatch from 2.3.0 to 2.3.2 ([#1074](https://github.com/oclif/plugin-command-snapshot/issues/1074)) ([99f246b](https://github.com/oclif/plugin-command-snapshot/commit/99f246b22dbbd17359071c828e343c7463a1ebf6))
+
 ## [6.0.10](https://github.com/oclif/plugin-command-snapshot/compare/6.0.9...6.0.10) (2026-11-08)
 
 ### Bug Fixes
